@@ -1,0 +1,1117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NFPTCEIS - National Fuel Price Transparency & Citizen Engagement Information System | Uganda</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--primary:#0d2137;--primary-light:#1a3a5c;--primary-dark:#071220;--secondary:#1b6b3f;--secondary-light:#2d8a52;--accent:#f4a300;--accent-light:#ffc107;--danger:#dc3545;--success:#28a745;--bg:#eef1f5;--bg-card:#fff;--text:#1a1a2e;--text-light:#6c757d;--text-white:#f8f9fa;--border:#dee2e6;--shadow:0 2px 20px rgba(0,0,0,0.08);--shadow-lg:0 8px 40px rgba(0,0,0,0.12);--radius:12px;--radius-sm:8px;--radius-lg:16px;--transition:all 0.3s cubic-bezier(0.4,0,0.2,1);--font:'Inter',sans-serif;--mw:1440px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#c1c7cd;border-radius:3px}
+.cont{max-width:var(--mw);margin:0 auto;padding:0 24px}
+.ubar{background:var(--primary-dark);border-bottom:1px solid rgba(255,255,255,0.06);font-size:12px;color:rgba(255,255,255,0.7);padding:6px 0;position:sticky;top:0;z-index:1100}
+.ubar .cont{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.uleft{display:flex;align-items:center;gap:12px}
+.uleft .gflag{display:flex;gap:3px}
+.uleft .gflag span{width:20px;height:5px;border-radius:2px}
+.uleft .gflag span:nth-child(1){background:#000}
+.uleft .gflag span:nth-child(2){background:#D90000}
+.uleft .gflag span:nth-child(3){background:#FCDD09}
+.uleft .gn{font-weight:600;color:var(--text-white);font-size:11px;letter-spacing:0.3px}
+.uleft .gn span{color:rgba(255,255,255,0.5);font-weight:400}
+.unav{display:flex;align-items:center;gap:4px;list-style:none}
+.unav a{color:rgba(255,255,255,0.6);text-decoration:none;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:500;transition:var(--transition);display:flex;align-items:center;gap:4px}
+.unav a:hover{background:rgba(255,255,255,0.08);color:var(--text-white)}
+.uright{display:flex;align-items:center;gap:6px}
+.uright .utb{padding:4px 12px;border-radius:4px;font-size:11px;font-weight:600;border:none;cursor:pointer;transition:var(--transition);font-family:var(--font);display:flex;align-items:center;gap:4px}
+.utb-out{background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15)!important}
+.utb-out:hover{background:rgba(255,255,255,0.1);color:var(--text-white)}
+.utb-acc{background:var(--accent);color:#000}
+.utb-acc:hover{background:var(--accent-light)}
+.mhdr{background:var(--bg-card);border-bottom:1px solid var(--border);padding:12px 0;position:sticky;top:34px;z-index:1050;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.mhdr .cont{display:flex;align-items:center;gap:24px}
+.hlogo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.hlogo-i{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:20px}
+.hlogo-t h1{font-size:14px;font-weight:800;color:var(--primary-dark);letter-spacing:-0.3px;line-height:1.2}
+.hlogo-t span{font-size:9px;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px}
+.hloc{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;transition:var(--transition);flex-shrink:0}
+.hloc:hover{border-color:var(--accent);background:#fffdf5}
+.hloc i{color:var(--accent);font-size:14px}
+.hloc select{border:none;background:transparent;font-size:12px;font-weight:600;font-family:var(--font);color:var(--text);outline:none;cursor:pointer}
+.hct{display:flex;align-items:center;gap:16px;margin-left:auto;flex-shrink:0}
+.hci{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-light)}
+.hci i{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+.hci .hii-hot{background:#fce8e6;color:var(--danger)}
+.hci .hii-con{background:#e6f4ea;color:var(--secondary)}
+.hci .hii-trk{background:#e8f0fe;color:#1a73e8}
+.hci strong{display:block;color:var(--text);font-size:12px}
+.hci .hil{font-size:9px;text-transform:uppercase;letter-spacing:0.3px;color:var(--text-light)}
+.ss{background:var(--primary);padding:20px 0;position:sticky;top:96px;z-index:1040;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+.ss .cont{display:flex;align-items:center;gap:16px}
+.sbw{flex:1;position:relative;max-width:720px}
+.sbw i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--accent);font-size:16px}
+.sbw input{width:100%;padding:14px 16px 14px 48px;border-radius:var(--radius);border:none;background:var(--bg-card);font-size:14px;font-family:var(--font);outline:none;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+.sbw input::placeholder{color:var(--text-light)}
+.sf{display:flex;gap:8px;flex-shrink:0}
+.sf select{padding:10px 14px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.1);color:var(--text-white);font-size:12px;font-family:var(--font);outline:none;cursor:pointer}
+.sf select option{background:var(--primary);color:#fff}
+.sbtn{padding:10px 28px;border-radius:var(--radius-sm);background:var(--accent);color:#000;border:none;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sbtn:hover{background:var(--accent-light);transform:translateY(-1px);box-shadow:0 4px 15px rgba(244,163,0,0.35)}
+.hero{padding:24px 0}
+.hero .cont{display:grid;grid-template-columns:1fr 320px;gap:20px}
+.hban{border-radius:var(--radius-lg);overflow:hidden;position:relative;min-height:380px;background:linear-gradient(135deg,var(--primary-dark)0%,var(--primary)40%,var(--primary-light)100%);display:flex;align-items:center;padding:40px 48px}
+.hbc{position:relative;z-index:2;max-width:520px}
+.hbadge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(244,163,0,0.15);border:1px solid rgba(244,163,0,0.3);border-radius:20px;color:var(--accent);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px}
+.hban h2{color:var(--text-white);font-size:32px;font-weight:900;letter-spacing:-1px;line-height:1.2;margin-bottom:12px}
+.hban p{color:rgba(255,255,255,0.7);font-size:14px;line-height:1.6;margin-bottom:20px}
+.hban .ha{display:flex;gap:10px;flex-wrap:wrap}
+.hban .hb{padding:12px 28px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;font-family:var(--font);border:none;cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:8px;text-decoration:none}
+.hb-pri{background:var(--accent);color:#000}
+.hb-pri:hover{background:var(--accent-light);transform:translateY(-2px);box-shadow:0 8px 25px rgba(244,163,0,0.35)}
+.hb-sec{background:rgba(255,255,255,0.1);color:var(--text-white);border:1px solid rgba(255,255,255,0.15)}
+.hb-sec:hover{background:rgba(255,255,255,0.15);transform:translateY(-2px)}
+.hbp{position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(244,163,0,0.08)0%,transparent 50%),radial-gradient(circle at 20% 80%,rgba(27,107,63,0.08)0%,transparent 50%);z-index:1}
+.hban .hg{position:absolute;right:40px;top:50%;transform:translateY(-50%);z-index:2;opacity:0.15;font-size:180px;color:var(--accent)}
+.hsid{display:flex;flex-direction:column;gap:12px}
+.hsc{background:var(--bg-card);border-radius:var(--radius);padding:16px 18px;border:1px solid var(--border);box-shadow:var(--shadow);transition:var(--transition)}
+.hsc:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.hsc .hsch{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.hsc .hsl{font-size:11px;color:var(--text-light);font-weight:500;text-transform:uppercase;letter-spacing:0.5px}
+.hsc .hsii{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.hsc .hsv{font-size:24px;font-weight:800;color:var(--primary-dark);letter-spacing:-0.5px}
+.hsc .hsc{font-size:11px;font-weight:600;margin-top:2px}
+.hsc .hsc.up{color:var(--success)}
+.hsc .hsc.down{color:var(--danger)}
+.hsc .hss{font-size:11px;color:var(--text-light);margin-top:2px}
+.cats{padding:0 0 24px}
+.shdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.shdr h2{font-size:20px;font-weight:800;color:var(--primary-dark);letter-spacing:-0.5px;display:flex;align-items:center;gap:10px}
+.shdr h2 i{color:var(--accent)}
+.shdr a{font-size:13px;color:var(--secondary);text-decoration:none;font-weight:600;display:flex;align-items:center;gap:4px}
+.shdr a:hover{color:var(--secondary-light)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.cc{background:var(--bg-card);border-radius:var(--radius);padding:24px 20px;border:1px solid var(--border);box-shadow:var(--shadow);cursor:pointer;transition:var(--transition);text-align:center;text-decoration:none;display:block;position:relative;overflow:hidden}
+.cc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--secondary);transform:scaleX(0);transform-origin:left;transition:transform 0.3s ease}
+.cc:hover::before{transform:scaleX(1)}
+.cc:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.cc .cii{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px;transition:var(--transition)}
+.cc:hover .cii{transform:scale(1.1)rotate(-5deg)}
+.cc h3{font-size:14px;font-weight:700;color:var(--primary-dark);margin-bottom:4px}
+.cc p{font-size:11px;color:var(--text-light);line-height:1.4}
+.news{padding:24px 0;background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ng{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.nc{background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;transition:var(--transition);cursor:pointer}
+.nc:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.nc-img{height:140px;display:flex;align-items:center;justify-content:center;font-size:40px;position:relative}
+.nc-img .nct{position:absolute;top:12px;left:12px;padding:3px 10px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.nc-bd{padding:16px 18px 18px}
+.nc-bd .nd{font-size:11px;color:var(--text-light);display:flex;align-items:center;gap:4px;margin-bottom:6px}
+.nc-bd h4{font-size:14px;font-weight:700;color:var(--primary-dark);line-height:1.4;margin-bottom:6px}
+.nc-bd p{font-size:12px;color:var(--text-light);line-height:1.5}
+.maps{padding:24px 0}
+.maps .cont{display:grid;grid-template-columns:1fr 320px;gap:20px}
+.mpc{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);position:relative;min-height:400px;background:var(--bg-card)}
+#map{height:400px;border-radius:var(--radius);z-index:1}
+.mleg{display:flex;gap:16px;padding:10px 16px;background:rgba(255,255,255,0.95);border-top:1px solid var(--border);font-size:11px}
+.mleg span{display:flex;align-items:center;gap:6px}
+.mleg .dot{width:10px;height:10px;border-radius:3px}
+.msl{display:flex;flex-direction:column;gap:8px;max-height:446px;overflow-y:auto}
+.msm{background:var(--bg-card);border-radius:var(--radius-sm);padding:12px 14px;border:1px solid var(--border);cursor:pointer;transition:var(--transition)}
+.msm:hover{box-shadow:var(--shadow);border-color:var(--accent)}
+.msm .msmh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.msm .msmn{font-size:13px;font-weight:700;color:var(--primary-dark)}
+.msm .msmr{font-size:11px;color:var(--accent)}
+.msm .msml{font-size:11px;color:var(--text-light)}
+.msm .msmp{display:flex;gap:12px;margin-top:6px;font-size:12px}
+.msm .msmp span strong{color:var(--primary-dark)}
+.anal{padding:24px 0;background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.ac{background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+.ach{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ach h3{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.acb{padding:16px 18px}
+.cbox{height:220px;position:relative}
+.mf{background:var(--primary-dark);border-top:3px solid var(--accent);padding:48px 0 0;margin-top:32px}
+.mf .cont{display:grid;grid-template-columns:repeat(5,1fr);gap:32px}
+.fc h4{color:var(--text-white);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:8px}
+.fc h4 i{color:var(--accent);font-size:14px}
+.fc ul{list-style:none}
+.fc ul li{margin-bottom:8px}
+.fc ul li a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:12px;transition:var(--transition);display:flex;align-items:center;gap:6px}
+.fc ul li a:hover{color:var(--accent);padding-left:4px}
+.fc ul li a i{width:16px;font-size:11px}
+.fci{display:flex;gap:10px;margin-bottom:12px;font-size:12px;color:rgba(255,255,255,0.55)}
+.fci .fci-i{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.fci strong{display:block;color:var(--text-white);margin-bottom:2px}
+.fsoc{display:flex;gap:8px;margin-top:12px}
+.fsoc a{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);text-decoration:none;font-size:15px;transition:var(--transition)}
+.fsoc a:hover{background:var(--accent);color:#000;transform:translateY(-2px)}
+.fbot{margin-top:40px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.06)}
+.fbot .cont{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.35);grid-template-columns:none}
+.fbot .cont .fbl{display:flex;gap:16px}
+.fbot .cont .fbl a{color:rgba(255,255,255,0.35);text-decoration:none}
+.fbot .cont .fbl a:hover{color:var(--accent)}
+.fem{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(220,53,69,0.1);border:1px solid rgba(220,53,69,0.2);border-radius:var(--radius-sm);margin-top:12px}
+.fem i{color:var(--danger);font-size:18px}
+.fem div{font-size:12px}
+.fem strong{color:var(--danger);font-size:16px}
+#loginScreen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,var(--primary-dark)0%,var(--primary)50%,#0f2b4a 100%);display:flex;align-items:center;justify-content:center;transition:opacity 0.6s ease,transform 0.6s ease}
+#loginScreen.hidden{opacity:0;pointer-events:none;transform:scale(1.05)}
+.lbp{position:absolute;inset:0;background:radial-gradient(circle at 20% 50%,rgba(244,163,0,0.05)0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(27,107,63,0.05)0%,transparent 50%);opacity:0.8}
+.lc{position:relative;width:100%;max-width:480px;padding:20px}
+.lcd{background:rgba(255,255,255,0.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-lg);padding:48px 40px;box-shadow:0 25px 80px rgba(0,0,0,0.5)}
+.lf{display:flex;justify-content:center;gap:4px;margin-bottom:8px}
+.lf span{width:40px;height:8px;border-radius:4px}
+.lf span:nth-child(1){background:#000}
+.lf span:nth-child(2){background:#D90000}
+.lf span:nth-child(3){background:#FCDD09}
+.le{width:72px;height:72px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;background:rgba(244,163,0,0.15);border-radius:50%;font-size:36px;color:var(--accent);border:2px solid rgba(244,163,0,0.3)}
+.lt{text-align:center;color:var(--text-white);font-size:22px;font-weight:700;letter-spacing:-0.5px}
+.lst{text-align:center;color:rgba(255,255,255,0.6);font-size:13px;margin:4px 0 28px}
+.fg{margin-bottom:18px}
+.fg label{display:block;color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;margin-bottom:6px}
+.fg input,.fg select{width:100%;padding:12px 16px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:var(--text-white);font-size:14px;font-family:var(--font);transition:var(--transition);outline:none}
+.fg input:focus,.fg select:focus{border-color:var(--accent);background:rgba(255,255,255,0.12);box-shadow:0 0 0 3px rgba(244,163,0,0.15)}
+.fg select option{background:var(--primary);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;font-family:var(--font);border:none;cursor:pointer;transition:var(--transition)}
+.btn-pri{background:var(--accent);color:#000}
+.btn-pri:hover{background:var(--accent-light);transform:translateY(-1px);box-shadow:0 8px 25px rgba(244,163,0,0.35)}
+.btn-sec{background:rgba(255,255,255,0.1);color:var(--text-white);border:1px solid rgba(255,255,255,0.15)}
+.btn-blk{width:100%}
+.rbadge{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
+.rbadge span{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);cursor:pointer;transition:var(--transition);border:1px solid transparent}
+.rbadge span.active{background:rgba(244,163,0,0.15);color:var(--accent);border-color:var(--accent)}
+#app{display:none}
+#app.active{display:block}
+.ai{padding:24px 0}
+.ahdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px}
+.ahdr h2{font-size:22px;font-weight:800;color:var(--primary-dark);letter-spacing:-0.5px}
+.ahdr .aui{display:flex;align-items:center;gap:12px}
+.aua{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff}
+.aun{font-size:13px;font-weight:600}
+.aur{font-size:11px;color:var(--text-light)}
+.atb{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.at{font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;padding:10px 18px;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:var(--font);transition:var(--transition)}
+.at:hover{color:var(--text)}
+.at.active{color:var(--accent);border-bottom-color:var(--accent)}
+.as{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px}
+.asc{background:var(--bg-card);border-radius:var(--radius);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow);transition:var(--transition)}
+.asc:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.asc .asch{display:flex;justify-content:space-between;align-items:flex-start}
+.asc .asci{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.asc .ascl{font-size:11px;color:var(--text-light);font-weight:500;text-transform:uppercase;letter-spacing:0.5px;margin-top:10px}
+.asc .ascv{font-size:26px;font-weight:800;color:var(--primary-dark);letter-spacing:-0.5px}
+.asc .ascc{font-size:11px;font-weight:600;margin-top:2px;display:flex;align-items:center;gap:4px}
+.asc .ascc.up{color:var(--success)}
+.asc .ascc.down{color:var(--danger)}
+.ag2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.apc{background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.apch{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.apch h3{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.apcb{padding:16px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.badge-g{background:#e6f4ea;color:#1b6b3f}
+.badge-r{background:#fce8e6;color:#dc3545}
+.badge-o{background:#fef7e0;color:#b8860b}
+.badge-b{background:#e8f0fe;color:#1a73e8}
+.badge-gy{background:#f1f3f4;color:#5f6368}
+.badge-p{background:#f3e8fd;color:#7c3aed}
+.ac1{background:linear-gradient(135deg,#1a73e8,#0d47a1)}
+.ac2{background:linear-gradient(135deg,#1b6b3f,#0d3b22)}
+.ac3{background:linear-gradient(135deg,#f4a300,#b8860b)}
+.ac4{background:linear-gradient(135deg,#7c3aed,#4c1d95)}
+.ac5{background:linear-gradient(135deg,#dc3545,#a50e0e)}
+.ac6{background:linear-gradient(135deg,#17a2b8,#0c5460)}
+.ac7{background:linear-gradient(135deg,#fd7e14,#c25a00)}
+.ac8{background:linear-gradient(135deg,#6f42c1,#3b1a6b)}
+.b2h{display:inline-flex;align-items:center;gap:6px;color:var(--secondary);text-decoration:none;font-size:12px;font-weight:600;cursor:pointer;background:none;border:none;padding:0;margin-bottom:16px;font-family:var(--font)}
+.b2h:hover{color:var(--secondary-light)}
+.modal-o{position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:20px}
+.modal-o.active{display:flex}
+.modal{background:var(--bg-card);border-radius:var(--radius-lg);width:100%;max-width:540px;max-height:80vh;overflow-y:auto;box-shadow:0 25px 80px rgba(0,0,0,0.3);animation:mi 0.25s ease}
+@keyframes mi{from{opacity:0;transform:scale(0.95)translateY(10px)}to{opacity:1;transform:scale(1)translateY(0)}}
+.mh{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg-card);z-index:1}
+.mh h3{font-size:17px;font-weight:700}
+.mx{width:30px;height:30px;border-radius:50%;border:none;background:var(--bg);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text-light)}
+.mb{padding:18px 22px}
+.mf2{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.mb .fg label{color:var(--text);font-size:12px}
+.mb .fg input,.mb .fg select,.mb .fg textarea{width:100%;padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);font-size:13px;font-family:var(--font);transition:var(--transition);background:#fff;outline:none;color:var(--text)}
+.mb .fg input:focus,.mb .fg select:focus,.mb .fg textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(244,163,0,0.1)}
+.mb .fr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.np{position:fixed;top:0;right:0;width:380px;bottom:0;z-index:6000;background:var(--bg-card);box-shadow:-4px 0 30px rgba(0,0,0,0.15);transform:translateX(100%);transition:transform 0.3s ease;display:flex;flex-direction:column}
+.np.active{transform:translateX(0)}
+.nph{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.npl{flex:1;overflow-y:auto}
+.ni{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:var(--transition)}
+.ni.unread{border-left:3px solid var(--accent);background:#fffdf5}
+.nii{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px}
+.nic{flex:1}
+.nit{font-size:13px;line-height:1.4}
+.nitm{font-size:11px;color:var(--text-light);margin-top:2px}
+.cpi{padding:14px 16px;border-bottom:1px solid var(--border);transition:var(--transition)}
+.cpi:hover{background:#f8f9fa}
+.cph{display:flex;justify-content:space-between;margin-bottom:6px}
+.cpt{font-weight:600;font-size:13px}
+.cpm{display:flex;gap:10px;font-size:11px;color:var(--text-light);margin-bottom:6px;flex-wrap:wrap}
+.cpd{font-size:12px;line-height:1.5;margin-bottom:6px}
+.cpa{display:flex;gap:6px;margin-top:8px}
+.btn-sm{padding:6px 12px;font-size:11px}
+.btn-out{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-suc{background:var(--secondary);color:#fff}
+.btn-dgr{background:var(--danger);color:#fff}
+.emp{text-align:center;padding:36px 16px;color:var(--text-light)}
+.emp i{font-size:40px;color:var(--border);margin-bottom:12px}
+.emp h4{font-size:15px;color:var(--text);margin-bottom:4px}
+.emp p{font-size:12px}
+@media(max-width:1024px){
+  .hero .cont{grid-template-columns:1fr}
+  .maps .cont{grid-template-columns:1fr}
+  .mf .cont{grid-template-columns:repeat(3,1fr)}
+  .hct{display:none}
+  .unav{display:none}
+}
+@media(max-width:768px){
+  .mf .cont{grid-template-columns:repeat(2,1fr)}
+  .cg{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .ag2{grid-template-columns:1fr}
+  .sf{display:none}
+  .ag{grid-template-columns:1fr}
+  .ng{grid-template-columns:1fr}
+  .hban{padding:24px;min-height:280px}
+  .hban h2{font-size:22px}
+  .hban .hg{display:none}
+  .cont{padding:0 16px}
+  .mhdr .cont{flex-wrap:wrap}
+  .hloc{display:none}
+  .np{width:100%}
+  .mb .fr{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .mf .cont{grid-template-columns:1fr}
+  .cg{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="lbp"></div>
+  <div class="lc">
+    <div class="lcd">
+      <div class="lf"><span></span><span></span><span></span></div>
+      <div class="le"><i class="fas fa-gas-pump"></i></div>
+      <div class="lt">NFPTCEIS</div>
+      <div class="lst">National Fuel Price Transparency & Citizen Engagement Information System<br><span style="font-size:11px;opacity:0.7;">Republic of Uganda — Ministry of Energy & Mineral Development</span></div>
+      <div style="margin-bottom:20px;">
+        <div style="text-align:center;color:rgba(255,255,255,0.5);font-size:11px;margin-bottom:8px;">SELECT PORTAL</div>
+        <div class="rbadge" id="loginRoleBadges">
+          <span class="active" data-role="citizen"><i class="fas fa-user"></i> Citizen</span>
+          <span data-role="operator"><i class="fas fa-gas-pump"></i> Station Operator</span>
+          <span data-role="government"><i class="fas fa-landmark"></i> Government</span>
+          <span data-role="admin"><i class="fas fa-shield-alt"></i> Admin</span>
+        </div>
+      </div>
+      <div class="fg">
+        <label><i class="fas fa-envelope" style="margin-right:6px;"></i> Email / Username</label>
+        <input type="text" id="loginEmail" placeholder="Enter your email" value="admin@nfm.go.ug">
+      </div>
+      <div class="fg">
+        <label><i class="fas fa-lock" style="margin-right:6px;"></i> Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter your password" value="password123">
+      </div>
+      <div style="text-align:center;color:rgba(255,255,255,0.4);font-size:11px;margin-bottom:16px;"><i class="fas fa-info-circle"></i> Demo: Click a role badge, then Sign In</div>
+      <button class="btn btn-pri btn-blk" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+      <div style="text-align:center;margin-top:24px;color:rgba(255,255,255,0.4);font-size:12px;">&copy; 2026 Ministry of Energy & Mineral Development, Uganda</div>
+      <div style="text-align:center;color:rgba(255,255,255,0.25);font-size:11px;margin-top:16px;">NFPTCEIS v3.0 &middot; Secure Gateway</div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+
+<!-- UTILITY BAR -->
+<div class="ubar">
+  <div class="cont">
+    <div class="uleft">
+      <div class="gflag"><span></span><span></span><span></span></div>
+      <div class="gn">Government of Uganda <span>| Ministry of Energy & Mineral Development</span></div>
+    </div>
+    <ul class="unav">
+      <li><a href="#" onclick="showPublic('home')"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="#" onclick="showPublic('citizen')"><i class="fas fa-user"></i> Citizen Portal</a></li>
+      <li><a href="#" onclick="showPublic('stations')"><i class="fas fa-gas-pump"></i> Fuel Station Portal</a></li>
+      <li><a href="#" onclick="showPublic('government')"><i class="fas fa-landmark"></i> Government Dashboard</a></li>
+      <li><a href="#" onclick="toggleNP()"><i class="fas fa-bell"></i> Notifications <span id="nb" style="background:var(--danger);color:#fff;padding:1px 6px;border-radius:8px;font-size:9px;">3</span></a></li>
+    </ul>
+    <div class="uright">
+      <button class="utb utb-out" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+      <button class="utb utb-acc" onclick="handleLogin()"><i class="fas fa-user-plus"></i> Register</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN HEADER -->
+<div class="mhdr">
+  <div class="cont">
+    <a href="#" class="hlogo" onclick="showPublic('home')">
+      <div class="hlogo-i"><i class="fas fa-gas-pump"></i></div>
+      <div class="hlogo-t">
+        <h1>NFPTCEIS</h1>
+        <span>National Fuel Price Transparency</span>
+      </div>
+    </a>
+    <div class="hloc">
+      <i class="fas fa-map-marker-alt"></i>
+      <select id="distSel" onchange="updDist(this.value)">
+        <option value="all">All Districts</option>
+        <option value="kampala">Kampala</option><option value="wakiso">Wakiso</option><option value="mukono">Mukono</option>
+        <option value="jinja">Jinja</option><option value="gulu">Gulu</option><option value="mbale">Mbale</option>
+        <option value="mbarara">Mbarara</option><option value="lira">Lira</option><option value="fort-portal">Fort Portal</option><option value="arua">Arua</option>
+      </select>
+    </div>
+    <div class="hct">
+      <div class="hci">
+        <i class="fas fa-phone-alt hii-hot"></i>
+        <div><span class="hil">Emergency Hotline</span><strong>0800 200 550</strong></div>
+      </div>
+      <div class="hci">
+        <i class="fas fa-headset hii-con"></i>
+        <div><span class="hil">Contact Center</span><strong>+256 414 123 456</strong></div>
+      </div>
+      <div class="hci">
+        <i class="fas fa-search hii-trk"></i>
+        <div><span class="hil">Complaint Status</span><strong><span style="cursor:pointer;color:var(--secondary);" onclick="openM('trackModal')">Track Now</span></strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH SECTION -->
+<div class="ss">
+  <div class="cont">
+    <div class="sbw">
+      <i class="fas fa-search"></i>
+      <input type="text" id="gs" placeholder="Search fuel stations, districts, fuel prices, or complaint tracking number..." />
+    </div>
+    <div class="sf">
+      <select id="sfFuel"><option value="all">All Fuel Types</option><option value="petrol">Petrol</option><option value="diesel">Diesel</option><option value="kerosene">Kerosene</option><option value="lpg">LPG</option></select>
+      <select id="sfReg"><option value="all">All Regions</option><option value="central">Central</option><option value="eastern">Eastern</option><option value="northern">Northern</option><option value="western">Western</option></select>
+    </div>
+    <button class="sbtn" onclick="perfSearch()"><i class="fas fa-search"></i> Search</button>
+  </div>
+</div>
+
+<div id="pub">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="cont">
+    <div class="hban">
+      <div class="hbp"></div>
+      <i class="fas fa-gas-pump hg"></i>
+      <div class="hbc">
+        <div class="hbadge"><i class="fas fa-bullhorn"></i> National Fuel Price Update</div>
+        <h2>Uganda Fuel Price<br>Transparency Platform</h2>
+        <p>Real-time fuel price monitoring, citizen complaint management, and government oversight across all districts. Empowering consumers with transparent fuel pricing information.</p>
+        <div class="ha">
+          <a href="#" class="hb hb-pri" onclick="handleLogin()"><i class="fas fa-rocket"></i> Get Started</a>
+          <a href="#" class="hb hb-sec" onclick="showPublic('citizen')"><i class="fas fa-play-circle"></i> Explore Portal</a>
+        </div>
+      </div>
+    </div>
+    <div class="hsid">
+      <div class="hsc">
+        <div class="hsch"><span class="hsl">Average Petrol Price</span><div class="hsii" style="background:#fce8e6;color:var(--danger);"><i class="fas fa-gas-pump"></i></div></div>
+        <div class="hsv" id="hPetrol">UGX 5,430</div><div class="hsc up"><i class="fas fa-arrow-up"></i> +2.1% this week</div><div class="hss">Per liter in Kampala region</div>
+      </div>
+      <div class="hsc">
+        <div class="hsch"><span class="hsl">Average Diesel Price</span><div class="hsii" style="background:#e6f4ea;color:var(--secondary);"><i class="fas fa-oil-can"></i></div></div>
+        <div class="hsv" id="hDiesel">UGX 5,120</div><div class="hsc down"><i class="fas fa-arrow-down"></i> -0.8% this week</div><div class="hss">Per liter in Kampala region</div>
+      </div>
+      <div class="hsc">
+        <div class="hsch"><span class="hsl">Average LPG Price</span><div class="hsii" style="background:#e8f0fe;color:#1a73e8;"><i class="fas fa-fire"></i></div></div>
+        <div class="hsv" id="hGas">UGX 75,000</div><div class="hsc up"><i class="fas fa-arrow-up"></i> +1.5% this month</div><div class="hss">Per 12.5kg cylinder</div>
+      </div>
+      <div class="hsc">
+        <div class="hsch"><span class="hsl">Government Notice</span><div class="hsii" style="background:#fef7e0;color:var(--accent);"><i class="fas fa-file-alt"></i></div></div>
+        <div style="font-size:12px;color:var(--text);font-weight:600;margin-bottom:2px;">New Price Control Order 2026</div>
+        <div style="font-size:11px;color:var(--text-light);">Effective June 1st, max petrol price set at UGX 5,500/L</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="cats">
+  <div class="cont">
+    <div class="shdr">
+      <h2><i class="fas fa-th-large"></i> Explore Services</h2>
+      <a href="#" onclick="handleLogin()">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="cg">
+      <a href="#" class="cc" onclick="showPublic('stations')">
+        <div class="cii" style="background:#fce8e6;color:var(--danger);"><i class="fas fa-gas-pump"></i></div>
+        <h3>Fuel Stations</h3><p>Browse 1,247 registered stations across Uganda</p>
+      </a>
+      <a href="#" class="cc" onclick="handleLogin()">
+        <div class="cii" style="background:#fff3e0;color:#e65100;"><i class="fas fa-tag"></i></div>
+        <h3>Petrol Prices</h3><p>Real-time petrol pricing from every station</p>
+      </a>
+      <a href="#" class="cc" onclick="handleLogin()">
+        <div class="cii" style="background:#e6f4ea;color:var(--secondary);"><i class="fas fa-oil-can"></i></div>
+        <h3>Diesel Prices</h3><p>Compare diesel costs across all regions</p>
+      </a>
+      <a href="#" class="cc" onclick="handleLogin()">
+        <div class="cii" style="background:#e8f0fe;color:#1a73e8;"><i class="fas fa-fire"></i></div>
+        <h3>Gas Prices</h3><p>LPG and kerosene price transparency</p>
+      </a>
+      <a href="#" class="cc" onclick="showPublic('map')">
+        <div class="cii" style="background:#f3e8fd;color:#7c3aed;"><i class="fas fa-map-marked-alt"></i></div>
+        <h3>Interactive Map</h3><p>Visual station locator with price indicators</p>
+      </a>
+      <a href="#" class="cc" onclick="handleLogin()">
+        <div class="cii" style="background:#fce8e6;color:var(--danger);"><i class="fas fa-exclamation-triangle"></i></div>
+        <h3>Citizen Complaints</h3><p>Submit and track complaints on fuel issues</p>
+      </a>
+      <a href="#" class="cc" onclick="handleLogin()">
+        <div class="cii" style="background:#fef7e0;color:var(--accent);"><i class="fas fa-gavel"></i></div>
+        <h3>Gov Responses</h3><p>Official responses to citizen concerns</p>
+      </a>
+      <a href="#" class="cc" onclick="handleLogin()">
+        <div class="cii" style="background:#e0f7fa;color:#00838f;"><i class="fas fa-comments"></i></div>
+        <h3>Discussions</h3><p>Community forum & price watch group</p>
+      </a>
+      <a href="#" class="cc" onclick="handleLogin()">
+        <div class="cii" style="background:#f1f3f4;color:#5f6368;"><i class="fas fa-chart-pie"></i></div>
+        <h3>Reports & Analytics</h3><p>Government reports and market analysis</p>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- NEWS -->
+<div class="news">
+  <div class="cont">
+    <div class="shdr">
+      <h2><i class="fas fa-newspaper"></i> News & Updates</h2>
+      <a href="#" onclick="handleLogin()">All Updates <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="ng" id="newsGrid">
+      <div class="nc">
+        <div class="nc-img" style="background:linear-gradient(135deg,#0d2137,#1a3a5c);color:var(--accent);">
+          <i class="fas fa-file-alt"></i>
+          <span class="nct" style="background:var(--accent);color:#000;">Announcement</span>
+        </div>
+        <div class="nc-bd">
+          <div class="nd"><i class="far fa-calendar-alt"></i> May 28, 2026</div>
+          <h4>New Fuel Price Control Order Issued by Ministry of Energy</h4>
+          <p>Maximum retail prices for petroleum products gazetted effective June 1st across all districts.</p>
+        </div>
+      </div>
+      <div class="nc">
+        <div class="nc-img" style="background:linear-gradient(135deg,#1b6b3f,#0d3b22);color:#fff;">
+          <i class="fas fa-check-circle"></i>
+          <span class="nct" style="background:var(--secondary);color:#fff;">Resolved</span>
+        </div>
+        <div class="nc-bd">
+          <div class="nd"><i class="far fa-calendar-alt"></i> May 26, 2026</div>
+          <h4>23 Complaints Resolved This Week - New Record</h4>
+          <p>Government response times improve as digital complaint management system reaches full capacity.</p>
+        </div>
+      </div>
+      <div class="nc">
+        <div class="nc-img" style="background:linear-gradient(135deg,#f4a300,#b8860b);color:#fff;">
+          <i class="fas fa-chart-line"></i>
+          <span class="nct" style="background:var(--danger);color:#fff;">Market Alert</span>
+        </div>
+        <div class="nc-bd">
+          <div class="nd"><i class="far fa-calendar-alt"></i> May 24, 2026</div>
+          <h4>Petrol Prices Rise 2.1% - Fuel Market Analysis Q2 2026</h4>
+          <p>National average petrol price increases as global crude oil markets show volatility this quarter.</p>
+        </div>
+      </div>
+      <div class="nc">
+        <div class="nc-img" style="background:linear-gradient(135deg,#7c3aed,#4c1d95);color:#fff;">
+          <i class="fas fa-gavel"></i>
+          <span class="nct" style="background:var(--info);color:#fff;">Regulation</span>
+        </div>
+        <div class="nc-bd">
+          <div class="nd"><i class="far fa-calendar-alt"></i> May 22, 2026</div>
+          <h4>New Fuel Quality Standards Amendment Passed</h4>
+          <p>All fuel stations must comply with updated UNBS fuel quality standards by August 2026.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div class="maps">
+  <div class="cont">
+    <div>
+      <div class="shdr">
+        <h2><i class="fas fa-map-marked-alt" style="color:var(--secondary);"></i> Fuel Station Map</h2>
+        <a href="#" onclick="showPublic('map')">Full Map <i class="fas fa-external-link-alt"></i></a>
+      </div>
+      <div class="mpc">
+        <div id="map"></div>
+        <div class="mleg">
+          <span><span class="dot" style="background:#1b6b3f;"></span> Verified</span>
+          <span><span class="dot" style="background:#dc3545;"></span> Unverified</span>
+          <span><i class="fas fa-star" style="color:var(--accent);"></i> Rating</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="shdr" style="margin-bottom:14px;">
+        <h2 style="font-size:16px;"><i class="fas fa-list"></i> Nearby Stations</h2>
+      </div>
+      <div class="msl" id="msl"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ANALYTICS -->
+<div class="anal">
+  <div class="cont">
+    <div class="shdr">
+      <h2><i class="fas fa-chart-bar" style="color:var(--primary-light);"></i> National Analytics</h2>
+      <a href="#" onclick="handleLogin()">Full Reports <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="ag">
+      <div class="ac">
+        <div class="ach"><h3><i class="fas fa-chart-line" style="color:var(--danger);"></i> National Fuel Trends</h3></div>
+        <div class="acb"><div class="cbox"><canvas id="trendChart"></canvas></div></div>
+      </div>
+      <div class="ac">
+        <div class="ach"><h3><i class="fas fa-map-marked-alt" style="color:var(--secondary);"></i> Regional Price Comparison</h3></div>
+        <div class="acb"><div class="cbox"><canvas id="regionalChart"></canvas></div></div>
+      </div>
+      <div class="ac">
+        <div class="ach"><h3><i class="fas fa-exclamation-triangle" style="color:var(--accent);"></i> Complaint Statistics</h3></div>
+        <div class="acb"><div class="cbox"><canvas id="complaintChart"></canvas></div></div>
+      </div>
+      <div class="ac">
+        <div class="ach"><h3><i class="fas fa-trophy" style="color:var(--accent);"></i> Station Rankings</h3></div>
+        <div class="acb" id="rankings"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end pub -->
+
+<!-- APP INTERFACE -->
+<div id="appContent" style="display:none;">
+  <div class="cont">
+    <div class="ai">
+      <button class="b2h" onclick="showPublic('home')"><i class="fas fa-arrow-left"></i> Back to Public Portal</button>
+      <div class="ahdr">
+        <h2 id="appPT">Dashboard</h2>
+        <div class="aui">
+          <div class="aua ac1" id="appAv">A</div>
+          <div>
+            <div class="aun" id="appUN">Admin User</div>
+            <div class="aur" id="appUR">System Administrator</div>
+          </div>
+          <button class="btn btn-sm btn-out" onclick="handleLogout()" style="margin-left:8px;"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+        </div>
+      </div>
+      <div class="atb" id="appTB"></div>
+      <div id="appTC"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="np" id="np">
+  <div class="nph"><h3><i class="fas fa-bell"></i> Notifications</h3><button class="mx" onclick="toggleNP()"><i class="fas fa-times"></i></button></div>
+  <div class="npl" id="npList"></div>
+</div>
+
+<!-- TRACK MODAL -->
+<div class="modal-o" id="trackModal">
+  <div class="modal">
+    <div class="mh"><h3><i class="fas fa-search"></i> Track Complaint Status</h3><button class="mx" onclick="closeM('trackModal')"><i class="fas fa-times"></i></button></div>
+    <div class="mb">
+      <div class="fg"><label>Complaint Reference Number</label><input class="form-control" id="trackRef" placeholder="e.g. 2026001"></div>
+      <div style="font-size:12px;color:var(--text-light);margin-bottom:12px;">Enter your complaint reference number to check the current status.</div>
+      <button class="btn btn-pri btn-blk" onclick="trkComp()"><i class="fas fa-search"></i> Track Complaint</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLAINT MODAL -->
+<div class="modal-o" id="compModal">
+  <div class="modal">
+    <div class="mh"><h3><i class="fas fa-exclamation-triangle" style="color:var(--danger);"></i> Submit Complaint</h3><button class="mx" onclick="closeM('compModal')"><i class="fas fa-times"></i></button></div>
+    <div class="mb">
+      <div class="fg"><label>Type</label><select class="form-control" id="compType"><option>Price Overcharging</option><option>Fuel Quality Issue</option><option>Station Misconduct</option><option>Price Manipulation</option><option>Pump Tampering</option><option>Other</option></select></div>
+      <div class="fg"><label>Station</label><select class="form-control" id="compStation"><option value="">-- Select --</option></select></div>
+      <div class="fg"><label>District</label><select class="form-control" id="compDistrict"><option>Kampala</option><option>Wakiso</option><option>Mukono</option><option>Jinja</option><option>Gulu</option><option>Mbale</option><option>Mbarara</option><option>Lira</option><option>Fort Portal</option><option>Arua</option></select></div>
+      <div class="fg"><label>Title</label><input class="form-control" id="compTitle" placeholder="Brief title"></div>
+      <div class="fg"><label>Description</label><textarea class="form-control" id="compDesc" placeholder="Describe the issue..."></textarea></div>
+      <div class="fg"><label>Priority</label><select class="form-control" id="compPri"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+    </div>
+    <div class="mf2">
+      <button class="btn btn-sec" onclick="closeM('compModal')" style="background:var(--bg);color:var(--text);border:1px solid var(--border);">Cancel</button>
+      <button class="btn btn-pri" onclick="subComp()"><i class="fas fa-paper-plane"></i> Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- FORUM MODAL -->
+<div class="modal-o" id="forumModal">
+  <div class="modal">
+    <div class="mh"><h3><i class="fas fa-comment-dots"></i> New Discussion</h3><button class="mx" onclick="closeM('forumModal')"><i class="fas fa-times"></i></button></div>
+    <div class="mb">
+      <div class="fg"><label>Topic</label><input class="form-control" id="fTopic" placeholder="Discussion title"></div>
+      <div class="fg"><label>Category</label><select class="form-control" id="fCat"><option>General Discussion</option><option>Price Watch</option><option>Station Reviews</option><option>Fuel Quality</option><option>Complaints</option><option>Tips & Advice</option></select></div>
+      <div class="fg"><label>Message</label><textarea class="form-control" id="fMsg" placeholder="Your message..."></textarea></div>
+    </div>
+    <div class="mf2">
+      <button class="btn btn-sec" onclick="closeM('forumModal')" style="background:var(--bg);color:var(--text);border:1px solid var(--border);">Cancel</button>
+      <button class="btn btn-pri" onclick="subForum()"><i class="fas fa-paper-plane"></i> Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- USER MODAL -->
+<div class="modal-o" id="userModal">
+  <div class="modal">
+    <div class="mh"><h3><i class="fas fa-user-plus"></i> Add User</h3><button class="mx" onclick="closeM('userModal')"><i class="fas fa-times"></i></button></div>
+    <div class="mb">
+      <div class="fr">
+        <div class="fg"><label>First Name</label><input class="form-control" id="nuF" placeholder="John"></div>
+        <div class="fg"><label>Last Name</label><input class="form-control" id="nuL" placeholder="Doe"></div>
+      </div>
+      <div class="fg"><label>Email</label><input class="form-control" id="nuE" placeholder="email@example.com"></div>
+      <div class="fg"><label>Role</label><select class="form-control" id="nuR"><option value="citizen">Citizen</option><option value="operator">Operator</option><option value="government">Government</option><option value="admin">Admin</option></select></div>
+      <div class="fg"><label>District</label><select class="form-control" id="nuD"><option>Kampala</option><option>Wakiso</option><option>Mukono</option><option>Jinja</option><option>Gulu</option><option>Mbale</option><option>Mbarara</option><option>Lira</option><option>Fort Portal</option><option>Arua</option></select></div>
+    </div>
+    <div class="mf2">
+      <button class="btn btn-sec" onclick="closeM('userModal')" style="background:var(--bg);color:var(--text);border:1px solid var(--border);">Cancel</button>
+      <button class="btn btn-pri" onclick="addU()"><i class="fas fa-user-plus"></i> Add User</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="mf">
+  <div class="cont">
+    <div class="fc">
+      <h4><i class="fas fa-info-circle"></i> System Overview</h4>
+      <ul>
+        <li><a href="#" onclick="showPublic('home')"><i class="fas fa-chevron-right"></i> About NFPTCEIS</a></li>
+        <li><a href="#" onclick="showPublic('home')"><i class="fas fa-chevron-right"></i> How It Works</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> System Status</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> API Access</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Data Sources</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Terms of Use</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4><i class="fas fa-gas-pump"></i> Fuel Services</h4>
+      <ul>
+        <li><a href="#" onclick="showPublic('stations')"><i class="fas fa-chevron-right"></i> Find Stations</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Petrol Prices</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Diesel Prices</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> LPG Prices</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Price Comparison</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Price History</a></li>
+        <li><a href="#" onclick="showPublic('map')"><i class="fas fa-chevron-right"></i> Station Map</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4><i class="fas fa-users"></i> Citizen Services</h4>
+      <ul>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Submit Complaint</a></li>
+        <li><a href="#" onclick="openM('trackModal')"><i class="fas fa-chevron-right"></i> Track Complaint</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Price Alerts</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Community Forum</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Report Issue</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Station Ratings</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4><i class="fas fa-landmark"></i> Government Services</h4>
+      <ul>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> National Dashboard</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Complaints Mgmt</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Investigations</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Compliance Reports</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Policy Center</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Market Analysis</a></li>
+        <li><a href="#" onclick="handleLogin()"><i class="fas fa-chevron-right"></i> Data Export</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4><i class="fas fa-phone-alt"></i> Contact</h4>
+      <div class="fci">
+        <div class="fci-i" style="background:rgba(244,163,0,0.15);color:var(--accent);"><i class="fas fa-map-pin"></i></div>
+        <div><strong>Address</strong>Plot 29/33, Kampala Road<br>P.O. Box 7270, Kampala, Uganda</div>
+      </div>
+      <div class="fci">
+        <div class="fci-i" style="background:rgba(27,107,63,0.15);color:var(--secondary);"><i class="fas fa-phone"></i></div>
+        <div><strong>Telephone</strong>+256 414 123 456<br>+256 414 789 012</div>
+      </div>
+      <div class="fci">
+        <div class="fci-i" style="background:rgba(220,53,69,0.15);color:var(--danger);"><i class="fas fa-envelope"></i></div>
+        <div><strong>Email</strong>info@energy.go.ug<br>complaints@nfm.go.ug</div>
+      </div>
+      <div class="fem">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div><strong>0800 200 550</strong><br><span style="font-size:10px;opacity:0.7;">Toll-Free &middot; 24/7 Fuel Emergency</span></div>
+      </div>
+      <div class="fsoc">
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="fbot">
+    <div class="cont">
+      <div>&copy; 2026 National Fuel Price Transparency & Citizen Engagement Information System. Ministry of Energy & Mineral Development, Republic of Uganda. All Rights Reserved.</div>
+      <div class="fbl">
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Accessibility</a><a href="#">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end #app -->
+<script>
+const ROLES={citizen:'Citizen',operator:'Station Operator',government:'Government Official',admin:'System Administrator'};
+const FUEL=['Petrol','Diesel','Kerosene','LPG'];
+const REGS=['Central','Eastern','Northern','Western'];
+const DISTS={central:['Kampala','Wakiso','Mukono','Masaka','Kayunga'],eastern:['Jinja','Mbale','Tororo','Busia','Soroti'],northern:['Gulu','Lira','Kitgum','Arua','Nebbi'],western:['Mbarara','Fort Portal','Kasese','Kabale','Masindi']};
+let cu=null,cr='citizen',mapI=null,mapM=[];
+let ch={},slr='citizen';
+let st,comps,forum,notifs,inv,audit,pols;
+
+function genSt(){
+  const n=['Kampala City Fuel','Jinja Road Petro','Shell Bukoto','Total Ntinda','Rubis Kyambogo','Hass Petroleum','Engen Industrial','Lake Oil','Stabex','Gulf Energy','Vivo Energy','Hash Energy','Kobil','MOGAS','Puma Energy','Crystal Oil','Savannah Fuel','Equatorial Oil','Nile Petroleum','Mountains Fuel','Pearl Fuel','Crater Oil','Source Energy','Inland Oil','Crossroads Fuel','Highway Petro','Central Depot','Distributor Hub','Island Fuel','Gold Oil','Heritage Fuel','National Energy','Patriot Fuel','Unity Oil','Gateway Station','Capital Fuel','Platinum Oil','Premier Energy','Royal Fuel','Supreme Gas','Trust Oil','Valley Energy','West End Fuel','Zenith Energy','Eastern Fuel','Northern Depot','Western Hub'];
+  return n.map((x,i)=>{
+    const r=REGS[i%4],dl=DISTS[r.toLowerCase()],d=dl[i%dl.length];
+    return {id:i+1,name:x,district:d,region:r,lat:1.3733+(Math.random()-0.5)*4,lng:32.2903+(Math.random()-0.5)*4,address:'Plot '+(i+1)+', '+d+' Rd',prices:{Petrol:5000+Math.floor(Math.random()*800),Diesel:4800+Math.floor(Math.random()*700),Kerosene:4200+Math.floor(Math.random()*600),LPG:75000+Math.floor(Math.random()*15000)},rating:(3.5+Math.random()*1.5).toFixed(1),verified:Math.random()>0.15,status:Math.random()>0.1?'active':'inactive',lastUpdated:new Date(Date.now()-Math.random()*86400000*3).toISOString()};
+  });
+}
+function initD(){
+  st=genSt();
+  const types=['Price Overcharging','Fuel Quality Issue','Station Misconduct','Price Manipulation','Pump Tampering','Other'];
+  const stat=['pending','under-investigation','resolved','rejected'];
+  const descs=['Station overcharged by UGX 500 above posted price','Fuel caused engine knocking, suspected adulteration','Rude staff and unprofessional conduct','Price changed between morning and evening without notice','Pump displayed incorrect volume','No receipt provided after purchase','Station sold petrol at UGX 6500 during fuel shortage','Suspected water contamination in diesel','Station refused to serve boda boda riders','Price not displayed at pump station'];
+  comps=[];
+  for(let i=0;i<24;i++){
+    const s=st[i%st.length];
+    comps.push({id:i+1,type:types[i%6],status:stat[i%4],title:'Comp #'+(2026001+i)+': '+descs[i%10].substring(0,40),description:descs[i%10]+'. Requires attention.',station:s.name,stationId:s.id,district:s.district,priority:['low','medium','high'][i%3],reportedBy:['John Muwonge','Sarah Nakato','Peter Ochen','Grace Akello','David Kato','Mama Florence'][i%6],date:new Date(Date.now()-Math.random()*86400000*14).toISOString(),resolution:null,assignedTo:null});
+  }
+  forum=[];
+  const topics=['Fuel prices rising too fast in Kampala','Best stations for diesel quality?','Notice: Price reduction expected next week','Report: Station in Jinja overcharging','Where to find affordable LPG?','Boda boda riders unite for fair pricing','Government should regulate fuel margins','Tips for saving on fuel costs','New stations opening in Northern region','Fuel shortage rumors - what is the truth?'];
+  const unames=['John Muwonge','Sarah Nakato','Peter Ochen','Grace Akello','David Kato','Mama Florence','Robert Mugisha','Amina Nantongo'];
+  const ucols=['ac1','ac2','ac3','ac4','ac5','ac6','ac7','ac8'];
+  for(let i=0;i<15;i++){
+    forum.push({id:i+1,user:unames[i%8],avatarColor:ucols[i%8],topic:topics[i%10],text:'I wanted to share my experience regarding "'+topics[i%10]+'". I have been monitoring the situation closely and I think we need more transparency from the authorities. What does everyone else think?',category:['General Discussion','Price Watch','Station Reviews','Fuel Quality','Complaints','Tips & Advice'][i%6],time:new Date(Date.now()-Math.random()*86400000*7).toISOString(),likes:Math.floor(Math.random()*50),replies:Math.floor(Math.random()*15)});
+  }
+  notifs=[
+    {id:1,text:'Price update: Petrol +UGX 50 in Central region',time:new Date(Date.now()-3600000*2),read:false,icon:'fas fa-gas-pump',iconColor:'gold'},
+    {id:2,text:'Your complaint #2026001 is now under investigation',time:new Date(Date.now()-3600000*5),read:false,icon:'fas fa-search',iconColor:'blue'},
+    {id:3,text:'New forum: "Fuel prices rising too fast in Kampala"',time:new Date(Date.now()-86400000),read:false,icon:'fas fa-comments',iconColor:'green'},
+    {id:4,text:'Government published new fuel pricing regulation',time:new Date(Date.now()-86400000*2),read:true,icon:'fas fa-file-alt',iconColor:'purple'},
+    {id:5,text:'Station "Kampala City Fuel" updated diesel price',time:new Date(Date.now()-86400000*2),read:true,icon:'fas fa-tag',iconColor:'teal'}
+  ];
+  inv=[
+    {id:1,title:'Price Manipulation - Kampala City Fuel',status:'in-progress',priority:'high',station:'Kampala City Fuel',assignedTo:'Officer Mugisha',date:new Date(Date.now()-86400000*3),desc:'Alleged price gouging during fuel shortage.'},
+    {id:2,title:'Fuel Quality - Jinja Road Petro',status:'pending',priority:'medium',station:'Jinja Road Petro',assignedTo:null,date:new Date(Date.now()-86400000),desc:'Reports of adulterated fuel causing engine damage.'},
+    {id:3,title:'Pump Tampering - Shell Bukoto',status:'in-progress',priority:'high',station:'Shell Bukoto',assignedTo:'Officer Nantongo',date:new Date(Date.now()-86400000*5),desc:'Suspected meter tampering to overcharge customers.'}
+  ];
+  audit=[
+    {action:'login',user:'Admin User',time:new Date(Date.now()-3600000),detail:'Logged in to admin portal'},
+    {action:'price_update',user:'Kampala City Fuel',time:new Date(Date.now()-7200000),detail:'Updated petrol price to UGX 5,380'},
+    {action:'complaint',user:'John Muwonge',time:new Date(Date.now()-10800000),detail:'Filed complaint #2026007'},
+    {action:'investigation',user:'Officer Mugisha',time:new Date(Date.now()-14400000),detail:'Opened investigation INV-2026-003'},
+    {action:'user',user:'Admin User',time:new Date(Date.now()-18000000),detail:'Created new operator account'},
+    {action:'login',user:'Sarah Nakato',time:new Date(Date.now()-21600000),detail:'Citizen login from Wakiso'}
+  ];
+  pols=[
+    {id:1,title:'Fuel Price Control Order 2026',category:'Price Regulation',date:new Date(Date.now()-86400000*30),status:'active',content:'Maximum retail price for petrol set at UGX 5,500 per liter...'},
+    {id:2,title:'Fuel Quality Standards Amendment',category:'Quality Standard',date:new Date(Date.now()-86400000*60),status:'active',content:'All fuel stations must comply with UNBS fuel quality standards...'},
+    {id:3,title:'License Renewal Requirements 2026',category:'Compliance Requirement',date:new Date(Date.now()-86400000*90),status:'active',content:'All stations must renew operating licenses by March 31...'},
+    {id:4,title:'Consumer Rights Protection Notice',category:'Public Notice',date:new Date(Date.now()-86400000*7),status:'active',content:'Consumers are entitled to receipts and accurate pump readings...'}
+  ];
+}
+
+document.getElementById('loginRoleBadges').addEventListener('click',function(e){
+  const b=e.target.closest('.rbadge span'); if(!b) return;
+  document.querySelectorAll('.rbadge span').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); slr=b.dataset.role;
+  document.getElementById('loginEmail').value={citizen:'citizen@example.com',operator:'operator@nfm.go.ug',government:'official@energy.go.ug',admin:'admin@nfm.go.ug'}[slr];
+});
+
+function handleLogin(){
+  cr=slr;
+  cu={name:{citizen:'John Muwonge',operator:'Kampala City Fuel',government:'Officer Sarah Nakito',admin:'Admin User'}[cr],email:document.getElementById('loginEmail').value.trim(),role:cr,avatar:'ac'+['citizen','operator','government','admin'].indexOf(cr)+1};
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('app').classList.add('active');
+  initApp();
+}
+
+function handleLogout(){
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('appContent').style.display='none';
+  document.getElementById('pub').style.display='block';
+  cu=null;
+}
+
+function initApp(){
+  initD();
+  document.getElementById('appAv').className='aua '+cu.avatar;
+  document.getElementById('appUN').textContent=cu.name;
+  document.getElementById('appUR').textContent=ROLES[cr];
+  document.getElementById('pub').style.display='none';
+  document.getElementById('appContent').style.display='block';
+  updNB(); rAppDash();
+}
+
+function showPublic(p){
+  if(p==='map'&&mapI) setTimeout(()=>mapI.invalidateSize(),100);
+  document.getElementById('pub').style.display='block';
+  document.getElementById('appContent').style.display='none';
+  if(p==='map'&&mapI) setTimeout(()=>mapI.invalidateSize(),200);
+}
+
+function ta(d){const s=(new Date()-new Date(d))/1000;if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+function fd(d){const dt=new Date(d);return dt.toLocaleDateString('en-UG',{day:'numeric',month:'short',year:'numeric'});}
+function openM(id){document.getElementById(id).classList.add('active');}
+function closeM(id){document.getElementById(id).classList.remove('active');}
+function updNB(){const un=notifs.filter(n=>!n.read).length;document.getElementById('nb').textContent=un;}
+function toggleNP(){document.getElementById('np').classList.toggle('active');if(document.getElementById('np').classList.contains('active'))rNP();}
+function rNP(){document.getElementById('npList').innerHTML=notifs.map(n=>'<div class="ni'+(n.read?'':' unread')+'" onclick="mNR('+n.id+')"><div class="nii" style="background:var(--bg);color:var(--'+n.iconColor+');"><i class="'+n.icon+'"></i></div><div class="nic"><div class="nit">'+n.text+'</div><div class="nitm">'+ta(n.time)+'</div></div></div>').join('');}
+function mNR(id){const n=notifs.find(x=>x.id===id);if(n){n.read=true;updNB();rNP();}}
+function updDist(v){}
+
+function rChart(id,type,data,opts){
+  if(ch[id]){ch[id].destroy();delete ch[id];}
+  const ctx=document.getElementById(id);if(!ctx)return;
+  ch[id]=new Chart(ctx,{type,data,options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10,family:"Inter"}}}},...opts}});
+}
+
+function initMap(){
+  const el=document.getElementById('map');if(!el)return;
+  if(mapI){mapI.invalidateSize();updMM();return;}
+  mapI=L.map('map',{zoomControl:true,attributionControl:false}).setView([1.3733,32.2903],7);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(mapI);
+  updMM();setTimeout(()=>mapI.invalidateSize(),500);
+}
+
+function gIcon(v){return L.divIcon({html:'<div style="background:'+(v?'#1b6b3f':'#dc3545')+';width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.2);"><i class="fas fa-gas-pump"></i></div>',className:'',iconSize:[30,30],iconAnchor:[15,15]});}
+
+function updMM(){
+  if(!mapI)return;
+  mapM.forEach(m=>mapI.removeLayer(m));mapM=[];
+  let f=st.filter(s=>true);f.sort((a,b)=>a.name.localeCompare(b.name));
+  f.forEach(s=>{
+    const m=L.marker([s.lat,s.lng],{icon:gIcon(s.verified)}).addTo(mapI);
+    m.bindPopup('<div style="min-width:180px;font-family:Inter,sans-serif;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">'+s.name+'</div><div style="font-size:11px;color:#666;margin-bottom:6px;"><i class="fas fa-map-pin"></i> '+s.district+', '+s.region+'</div>'+FUEL.map(f=>'<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0;"><span>'+f+'</span><strong>UGX '+s.prices[f].toLocaleString()+'</strong></div>').join('')+'<div style="margin-top:6px;display:flex;justify-content:space-between;font-size:11px;"><span><i class="fas fa-star" style="color:#f4a300;"></i> '+s.rating+'</span><span>'+(s.verified?'<span style="color:#1b6b3f;">&#10003; Verified</span>':'<span style="color:#dc3545;">&#9888; Unverified</span>')+'</span></div></div>');
+    mapM.push(m);
+  });
+  rMSL(f.slice(0,6));
+}
+
+function rMSL(f){
+  const c=document.getElementById('msl');if(!c)return;
+  c.innerHTML=f.map(s=>'<div class="msm" onclick="if(mapI){mapI.flyTo(['+s.lat+','+s.lng+'],12);}"><div class="msmh"><span class="msmn">'+s.name+'</span><span class="msmr"><i class="fas fa-star"></i> '+s.rating+'</span></div><div class="msml"><i class="fas fa-map-pin"></i> '+s.district+', '+s.region+'</div><div class="msmp"><span>Petrol: <strong>UGX '+s.prices.Petrol.toLocaleString()+'</strong></span><span>Diesel: <strong>UGX '+s.prices.Diesel.toLocaleString()+'</strong></span></div></div>').join('');
+}
+
+function perfSearch(){
+  const q=document.getElementById('gs').value.toLowerCase().trim();
+  if(q.length<2)return;
+  const r=st.filter(s=>s.name.toLowerCase().includes(q)||s.district.toLowerCase().includes(q));
+  if(r.length&&mapI){mapI.flyTo([r[0].lat,r[0].lng],10);rMSL(r.slice(0,6));}
+}
+
+function rAppDash(){
+  const tb=document.getElementById('appTB'),tc=document.getElementById('appTC');
+  if(cr==='citizen'){
+    tb.innerHTML='<button class="at active" onclick="swAT(\'dash\',this)"><i class="fas fa-home"></i> Dashboard</button><button class="at" onclick="swAT(\'map2\',this)"><i class="fas fa-map-marked-alt"></i> Station Map</button><button class="at" onclick="swAT(\'comp\',this)"><i class="fas fa-chart-bar"></i> Price Compare</button><button class="at" onclick="swAT(\'comps\',this)"><i class="fas fa-exclamation-triangle"></i> Complaints</button><button class="at" onclick="swAT(\'forum\',this)"><i class="fas fa-comments"></i> Forum</button><button class="at" onclick="swAT(\'notif\',this)"><i class="fas fa-bell"></i> Notifications</button>';
+    document.getElementById('appPT').textContent='Citizen Dashboard';rCD();
+  }else if(cr==='operator'){
+    tb.innerHTML='<button class="at active" onclick="swAT(\'dash\',this)"><i class="fas fa-tachometer-alt"></i> Dashboard</button><button class="at" onclick="swAT(\'station\',this)"><i class="fas fa-gas-pump"></i> My Station</button><button class="at" onclick="swAT(\'prices\',this)"><i class="fas fa-tags"></i> Prices</button><button class="at" onclick="swAT(\'feedback\',this)"><i class="fas fa-star"></i> Feedback</button><button class="at" onclick="swAT(\'analytics\',this)"><i class="fas fa-chart-line"></i> Analytics</button>';
+    document.getElementById('appPT').textContent='Operator Dashboard';rOD();
+  }else if(cr==='government'){
+    tb.innerHTML='<button class="at active" onclick="swAT(\'dash\',this)"><i class="fas fa-tachometer-alt"></i> National Dashboard</button><button class="at" onclick="swAT(\'comps\',this)"><i class="fas fa-clipboard-list"></i> Complaints</button><button class="at" onclick="swAT(\'inv\',this)"><i class="fas fa-search"></i> Investigations</button><button class="at" onclick="swAT(\'comp2\',this)"><i class="fas fa-check-double"></i> Compliance</button><button class="at" onclick="swAT(\'reports\',this)"><i class="fas fa-chart-pie"></i> Reports</button><button class="at" onclick="swAT(\'policy\',this)"><i class="fas fa-file-alt"></i> Policy</button>';
+    document.getElementById('appPT').textContent='Government Control Center';rGD();
+  }else{
+    tb.innerHTML='<button class="at active" onclick="swAT(\'dash\',this)"><i class="fas fa-tachometer-alt"></i> Dashboard</button><button class="at" onclick="swAT(\'users\',this)"><i class="fas fa-users-cog"></i> Users</button><button class="at" onclick="swAT(\'stations\',this)"><i class="fas fa-gas-pump"></i> Stations</button><button class="at" onclick="swAT(\'audit\',this)"><i class="fas fa-history"></i> Audit Log</button><button class="at" onclick="swAT(\'settings\',this)"><i class="fas fa-cog"></i> Settings</button>';
+    document.getElementById('appPT').textContent='Administration';rAD();
+  }
+}
+
+function swAT(t,btn){
+  document.querySelectorAll('.at').forEach(x=>x.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const tc=document.getElementById('appTC');
+  if(cr==='citizen'){
+    if(t==='dash')rCD();else if(t==='map2')initMap();else if(t==='comp')rComp();else if(t==='comps')rMyC();else if(t==='forum')rF();else if(t==='notif')rNPg();
+  }else if(cr==='operator'){
+    if(t==='dash')rOD();else if(t==='station')rOS();else if(t==='prices')rOP();else if(t==='feedback')rOF();else if(t==='analytics')rOA();
+  }else if(cr==='government'){
+    if(t==='dash')rGD();else if(t==='comps')rGC();else if(t==='inv')rGI();else if(t==='comp2')rGComp();else if(t==='reports')rGA();else if(t==='policy')rGP();
+  }else{
+    if(t==='dash')rAD();else if(t==='users')rAU();else if(t==='stations')rAS();else if(t==='audit')rAA();else if(t==='settings')tc.innerHTML='<div class="apc"><div class="apcb"><p style="text-align:center;padding:20px;color:var(--text-light);">Settings panel loaded.</p></div></div>';
+  }
+}
+
+function rCD(){
+  const tc=document.getElementById('appTC');
+  const sorted=[...st].sort((a,b)=>a.prices.Petrol-b.prices.Petrol);
+  tc.innerHTML='<div class="as"><div class="asc"><div class="asch"><div class="asci" style="background:#fef7e0;color:var(--accent);"><i class="fas fa-gas-pump"></i></div><span style="font-size:10px;color:var(--text-light);">Avg Petrol</span></div><div class="ascv"><span style="font-size:14px;font-weight:600;color:var(--text-light);">UGX </span>5,430</div><div class="ascc up"><i class="fas fa-arrow-up"></i> +2.1%</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#e6f4ea;color:var(--secondary);"><i class="fas fa-oil-can"></i></div><span style="font-size:10px;color:var(--text-light);">Avg Diesel</span></div><div class="ascv"><span style="font-size:14px;font-weight:600;color:var(--text-light);">UGX </span>5,120</div><div class="ascc down"><i class="fas fa-arrow-down"></i> -0.8%</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#e8f0fe;color:#1a73e8;"><i class="fas fa-map-marker-alt"></i></div><span style="font-size:10px;color:var(--text-light);">Stations</span></div><div class="ascv">1,247</div><div class="ascc up"><i class="fas fa-plus"></i> 12 new</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#fce8e6;color:var(--danger);"><i class="fas fa-exclamation-circle"></i></div><span style="font-size:10px;color:var(--text-light);">Active Complaints</span></div><div class="ascv">47</div><div class="ascc down"><i class="fas fa-check"></i> 23 resolved</div></div></div><div class="ag2"><div class="apc"><div class="apch"><h3><i class="fas fa-map-marked-alt" style="color:var(--secondary);"></i> Nearby Stations</h3><button class="btn btn-sm btn-out" onclick="swAT(\'map2\',document.querySelector(\'.at:nth-child(2)\'))">View All</button></div><div class="apcb">'+sorted.slice(0,4).map(s=>'<div style="padding:10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;cursor:pointer;" onclick="swAT(\'map2\',document.querySelector(\'.at:nth-child(2)\'))"><div><strong>'+s.name+'</strong><br><span style="font-size:11px;color:var(--text-light);">'+s.district+'</span></div><div style="text-align:right;"><strong>UGX '+s.prices.Petrol.toLocaleString()+'</strong><br><span style="font-size:11px;color:var(--text-light);"><i class="fas fa-star" style="color:var(--accent);"></i> '+s.rating+'</span></div></div>').join('')+'</div></div><div class="apc"><div class="apch"><h3><i class="fas fa-bell" style="color:var(--accent);"></i> Recent Updates</h3></div><div class="apcb">'+notifs.slice(0,4).map(n=>'<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;"><div style="width:28px;height:28px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--'+n.iconColor+');"><i class="'+n.icon+'"></i></div><div><div style="font-size:13px;">'+n.text+'</div><div style="font-size:11px;color:var(--text-light);">'+ta(n.time)+'</div></div></div>').join('')||'<div class="emp"><p>No updates</p></div>' +'</div></div></div><div class="apc"><div class="apch"><h3><i class="fas fa-chart-line" style="color:var(--primary-light);"></i> National Price Trends</h3></div><div class="apcb"><div style="height:220px;"><canvas id="cTrend"></canvas></div></div></div>';
+  rChart('cTrend','line',{labels:Array.from({length:30},(_,i)=>'D'+(i+1)),datasets:[{label:'Petrol',data:Array.from({length:30},()=>5200+Math.random()*400),borderColor:'#dc3545',tension:0.4,fill:false},{label:'Diesel',data:Array.from({length:30},()=>4900+Math.random()*400),borderColor:'#1b6b3f',tension:0.4,fill:false}]});
+}
+
+function rComp(){
+  const tc=document.getElementById('appTC');
+  tc.innerHTML='<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;"><select class="form-control" style="width:auto;padding:8px 12px;font-size:12px;" id="cReg"><option value="all">All Regions</option><option value="central">Central</option><option value="eastern">Eastern</option><option value="northern">Northern</option><option value="western">Western</option></select><select class="form-control" style="width:auto;padding:8px 12px;font-size:12px;" id="cFuel"><option value="petrol">Petrol</option><option value="diesel">Diesel</option><option value="kerosene">Kerosene</option><option value="lpg">LPG</option></select><button class="btn btn-sm btn-pri" onclick="updComp()"><i class="fas fa-sync"></i> Refresh</button></div><div class="ag2"><div class="apc"><div class="apch"><h3>Station Price List</h3></div><div class="apcb" id="compList"></div></div><div class="apc"><div class="apch"><h3>Price Comparison Chart</h3></div><div class="apcb"><div style="height:220px;"><canvas id="compChart"></canvas></div></div></div></div><div class="apc"><div class="apch"><h3>Statistics</h3></div><div class="apcb"><div id="compStats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;"></div></div></div>';
+  updComp();
+}
+
+function updComp(){
+  const reg=document.getElementById('cReg').value, fuel=document.getElementById('cFuel').value;
+  const fk=fuel.charAt(0).toUpperCase()+fuel.slice(1);
+  let f=reg==='all'?st:st.filter(s=>s.region.toLowerCase()===reg);
+  f.sort((a,b)=>a.prices[fk]-b.prices[fk]);
+  document.getElementById('compList').innerHTML=f.map(s=>'<div style="padding:8px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;"><div><strong>'+s.name+'</strong><br><span style="font-size:11px;color:var(--text-light);">'+s.district+'</span></div><div style="text-align:right;"><strong style="font-size:14px;color:var(--primary-dark);">UGX '+s.prices[fk].toLocaleString()+'</strong><br><span style="font-size:10px;color:var(--text-light);"><i class="fas fa-star" style="color:var(--accent);"></i> '+s.rating+'</span></div></div>').join('')||'<div class="emp"><p>No stations</p></div>';
+  rChart('compChart','bar',{labels:f.slice(0,10).map(s=>s.name.substring(0,12)),datasets:[{label:fk+' (UGX)',data:f.slice(0,10).map(s=>s.prices[fk]),backgroundColor:'#f4a300'}]},{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:false}}});
+  const pr=f.map(s=>s.prices[fk]);
+  if(pr.length){const mn=Math.min(...pr),mx=Math.max(...pr),av=Math.round(pr.reduce((a,b)=>a+b,0)/pr.length);document.getElementById('compStats').innerHTML='<div style="text-align:center;"><div style="font-size:24px;font-weight:800;color:var(--success);">UGX '+mn.toLocaleString()+'</div><div style="font-size:10px;color:var(--text-light);text-transform:uppercase;">Lowest</div></div><div style="text-align:center;"><div style="font-size:24px;font-weight:800;color:var(--danger);">UGX '+mx.toLocaleString()+'</div><div style="font-size:10px;color:var(--text-light);text-transform:uppercase;">Highest</div></div><div style="text-align:center;"><div style="font-size:24px;font-weight:800;">UGX '+av.toLocaleString()+'</div><div style="font-size:10px;color:var(--text-light);text-transform:uppercase;">Average</div></div><div style="text-align:center;"><div style="font-size:24px;font-weight:800;">'+f.length+'</div><div style="font-size:10px;color:var(--text-light);text-transform:uppercase;">Stations</div></div>';}
+}
+
+let mcf='all';
+function rMyC(){
+  let f=comps.filter(c=>true);if(mcf!=='all')f=f.filter(c=>c.status===mcf);
+  document.getElementById('appTC').innerHTML='<div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;"><button class="btn btn-pri" onclick="openM(\'compModal\')"><i class="fas fa-plus"></i> Submit</button><select class="form-control" style="width:auto;padding:8px 12px;font-size:12px;" onchange="mcf=this.value;rMyC()"><option value="all">All Status</option><option value="pending">Pending</option><option value="under-investigation">Investigation</option><option value="resolved">Resolved</option><option value="rejected">Rejected</option></select></div><div class="apc"><div class="apcb">'+f.map(c=>'<div class="cpi"><div class="cph"><div class="cpt">'+c.title+'</div><span class="badge '+(c.status==='resolved'?'badge-g':c.status==='under-investigation'?'badge-b':c.status==='rejected'?'badge-r':'badge-o')+'">'+c.status.replace(/-/g,' ')+'</span></div><div class="cpm"><span><i class="fas fa-tag"></i> '+c.type+'</span><span><i class="fas fa-map-pin"></i> '+c.station+'</span></div><div class="cpd">'+c.description+'</div>'+(c.status==='resolved'?'<div style="font-size:11px;color:var(--success);"><i class="fas fa-check-circle"></i> Resolved</div>':'')+'</div>').join('')||'<div class="emp"><i class="fas fa-inbox"></i><h4>No complaints</h4><p>You have not submitted any complaints yet.</p></div>' +'</div></div>';
+}
+
+function subComp(){
+  const t=document.getElementById('compTitle').value,d=document.getElementById('compDesc').value;
+  if(!t||!d){alert('Fill title and description');return;}
+  comps.unshift({id:comps.length+1,type:document.getElementById('compType').value,status:'pending',title:t,description:d,station:document.getElementById('compStation').value||'N/A',district:document.getElementById('compDistrict').value,priority:document.getElementById('compPri').value,reportedBy:cu.name,date:new Date().toISOString()});
+  notifs.unshift({id:Date.now(),text:'Complaint filed: "'+t.substring(0,40)+'..."',time:new Date(),read:false,icon:'fas fa-exclamation-triangle',iconColor:'red'});
+  updNB();closeM('compModal');document.getElementById('compTitle').value='';document.getElementById('compDesc').value='';rMyC();alert('Complaint submitted. Ref #'+(2026000+comps.length));
+}
+
+function rF(){
+  document.getElementById('appTC').innerHTML='<div style="margin-bottom:16px;"><button class="btn btn-pri" onclick="openM(\'forumModal\')"><i class="fas fa-plus"></i> New Discussion</button></div><div class="apc"><div class="apcb">'+forum.map(p=>'<div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;"><div class="aua '+p.avatarColor+'" style="width:34px;height:34px;font-size:13px;flex-shrink:0;">'+p.user.charAt(0)+'</div><div style="flex:1;"><div><strong style="font-size:13px;">'+p.user+'</strong><span style="font-size:11px;color:var(--text-light);margin-left:8px;">'+ta(p.time)+' &middot; '+p.category+'</span></div><div style="font-size:13px;margin:6px 0;"><strong>'+p.topic+'</strong><br>'+p.text+'</div><div style="display:flex;gap:16px;font-size:12px;color:var(--text-light);"><span><i class="far fa-thumbs-up"></i> '+p.likes+'</span><span><i class="far fa-comment"></i> '+p.replies+' replies</span></div></div></div>').join('')+'</div></div>';
+}
+
+function subForum(){
+  const t=document.getElementById('fTopic').value,m=document.getElementById('fMsg').value;
+  if(!t||!m){alert('Fill topic and message');return;}
+  forum.unshift({id:forum.length+1,user:cu.name,avatarColor:cu.avatar,topic:t,text:m,category:document.getElementById('fCat').value,time:new Date().toISOString(),likes:0,replies:0});
+  closeM('forumModal');document.getElementById('fTopic').value='';document.getElementById('fMsg').value='';rF();alert('Discussion posted!');
+}
+
+function rNPg(){
+  document.getElementById('appTC').innerHTML='<div style="margin-bottom:16px;"><button class="btn btn-sm btn-out" onclick="notifs.forEach(n=>n.read=true);updNB();rNP();rNPg();"><i class="fas fa-check-double"></i> Mark All Read</button></div><div class="apc"><div class="apcb">'+notifs.map(n=>'<div class="ni'+(n.read?'':' unread')+'" onclick="mNR('+n.id+');rNPg()"><div class="nii" style="background:var(--bg);color:var(--'+n.iconColor+');"><i class="'+n.icon+'"></i></div><div class="nic"><div class="nit">'+n.text+'</div><div class="nitm">'+ta(n.time)+'</div></div></div>').join('')||'<div class="emp"><i class="fas fa-bell"></i><h4>All caught up!</h4></div>' +'</div></div>';
+}
+
+function rOD(){
+  const tc=document.getElementById('appTC');
+  tc.innerHTML='<div class="as"><div class="asc"><div class="asch"><div class="asci" style="background:#e6f4ea;color:var(--secondary);"><i class="fas fa-gas-pump"></i></div><span style="font-size:10px;color:var(--text-light);">Station</span></div><div class="ascv" style="font-size:18px;">Kampala City Fuel</div><div class="ascc up"><i class="fas fa-check-circle"></i> Verified</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#e8f0fe;color:#1a73e8;"><i class="fas fa-tag"></i></div><span style="font-size:10px;color:var(--text-light);">Petrol</span></div><div class="ascv"><span style="font-size:14px;font-weight:600;color:var(--text-light);">UGX </span>5,380</div><div class="ascc up"><i class="fas fa-arrow-up"></i> Updated 2h ago</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#fef7e0;color:var(--accent);"><i class="fas fa-star"></i></div><span style="font-size:10px;color:var(--text-light);">Rating</span></div><div class="ascv">4.2</div><div class="ascc up"><i class="fas fa-arrow-up"></i> +0.3</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#fce8e6;color:var(--danger);"><i class="fas fa-users"></i></div><span style="font-size:10px;color:var(--text-light);">Today</span></div><div class="ascv">187</div><div class="ascc up"><i class="fas fa-arrow-up"></i> +12%</div></div></div><div class="ag2"><div class="apc"><div class="apch"><h3><i class="fas fa-tags"></i> Prices</h3><button class="btn btn-sm btn-pri" onclick="swAT(\'prices\',document.querySelector(\'.at:nth-child(3)\'))">Update</button></div><div class="apcb"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">'+FUEL.map(f=>'<div style="padding:6px 10px;background:var(--bg);border-radius:4px;display:flex;justify-content:space-between;font-size:12px;"><span>'+f+'</span><strong>UGX '+st[0].prices[f].toLocaleString()+'</strong></div>').join('')+'</div></div></div><div class="apc"><div class="apch"><h3><i class="fas fa-comment-dots"></i> Feedback</h3></div><div class="apcb"><div style="font-size:12px;padding:8px 0;border-bottom:1px solid var(--border);"><strong>John M.</strong> <span style="color:var(--accent);">&#9733;&#9733;&#9733;&#9733;&#9734;</span> Great service!</div><div style="font-size:12px;padding:8px 0;border-bottom:1px solid var(--border);"><strong>Sarah N.</strong> <span style="color:var(--accent);">&#9733;&#9733;&#9733;&#9733;&#9733;</span> Quick!</div><div style="font-size:12px;padding:8px 0;"><strong>Peter O.</strong> <span style="color:var(--accent);">&#9733;&#9733;&#9733;&#9734;&#9734;</span> Good fuel.</div></div></div></div><div class="apc"><div class="apch"><h3><i class="fas fa-chart-line"></i> Sales Trend</h3></div><div class="apcb"><div style="height:160px;"><canvas id="opSales"></canvas></div></div></div>';
+  rChart('opSales','line',{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Sales (UGX 000s)',data:[120,145,132,158,162,189,175],borderColor:'#1b6b3f',tension:0.4,fill:true,backgroundColor:'rgba(27,107,63,0.1)'}]},{responsive:true,maintainAspectRatio:false});
+}
+function rOS(){
+  const s=st[0];
+  document.getElementById('appTC').innerHTML='<div class="ag2"><div class="apc"><div class="apch"><h3>Station Info</h3></div><div class="apcb"><div class="fg"><label>Name</label><input class="form-control" value="'+s.name+'"></div><div class="fg"><label>Address</label><input class="form-control" value="'+s.address+'"></div><div class="fr"><div class="fg"><label>District</label><select class="form-control"><option>Kampala</option><option>Wakiso</option><option>Mukono</option></select></div><div class="fg"><label>Region</label><select class="form-control"><option>Central</option><option>Eastern</option><option>Northern</option><option>Western</option></select></div></div><div class="fg"><label>Phone</label><input class="form-control" value="+256 700 123 456"></div><button class="btn btn-suc" onclick="alert(\'Saved!\')"><i class="fas fa-save"></i> Save</button></div></div><div class="apc"><div class="apch"><h3>Preview</h3></div><div class="apcb"><div style="padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><strong style="font-size:14px;">'+s.name+'</strong><span class="badge badge-g">Verified</span></div><div style="font-size:12px;color:var(--text-light);margin-bottom:8px;"><i class="fas fa-map-pin"></i> '+s.address+'</div>'+FUEL.map(f=>'<div style="display:flex;justify-content:space-between;padding:4px 8px;background:var(--bg);border-radius:4px;font-size:12px;margin-bottom:4px;"><span>'+f+'</span><strong>UGX '+s.prices[f].toLocaleString()+'</strong></div>').join('')+'</div></div></div></div>';
+}
+
+function rOP(){
+  document.getElementById('appTC').innerHTML='<div class="apc"><div class="apch"><h3>Fuel Prices</h3></div><div class="apcb"><table class="app-table"><thead><tr><th>Fuel</th><th>Price (UGX)</th><th>Updated</th><th>Status</th><th>Action</th></tr></thead><tbody>'+FUEL.map(f=>'<tr><td><strong>'+f+'</strong></td><td><input class="form-control" style="width:120px;padding:6px 10px;" value="'+st[0].prices[f]+'"></td><td style="font-size:11px;">'+ta(st[0].lastUpdated)+'</td><td><span class="badge badge-g">Active</span></td><td><button class="btn btn-sm btn-pri" onclick="alert(\'Updated!\')">Update</button></td></tr>').join('')+'</tbody></table></div></div><div class="apc"><div class="apch"><h3>Price History</h3></div><div class="apcb"><div style="height:160px;"><canvas id="opHist"></canvas></div></div></div>';
+  rChart('opHist','line',{labels:['W1','W2','W3','W4'],datasets:[{label:'Petrol',data:[5350,5380,5400,5380],borderColor:'#dc3545',tension:0.4},{label:'Diesel',data:[5100,5080,5120,5120],borderColor:'#1b6b3f',tension:0.4}]},{responsive:true,maintainAspectRatio:false});
+}
+
+function rOF(){
+  document.getElementById('appTC').innerHTML='<div class="as" style="grid-template-columns:repeat(3,1fr);"><div class="asc" style="text-align:center;"><div style="font-size:28px;font-weight:800;">4.2</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-light);">Avg Rating</div><div style="color:var(--accent);font-size:16px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div></div><div class="asc" style="text-align:center;"><div style="font-size:28px;font-weight:800;">128</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-light);">Reviews</div></div><div class="asc" style="text-align:center;"><div style="font-size:28px;font-weight:800;color:var(--success);">94%</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-light);">Satisfaction</div></div></div><div class="apc"><div class="apcb"><div class="cpi"><div style="display:flex;justify-content:space-between;"><div><strong>John M.</strong> <span style="color:var(--accent);">&#9733;&#9733;&#9733;&#9733;&#9734;</span></div><span style="font-size:11px;color:var(--text-light);">2d ago</span></div><div style="font-size:12px;">Excellent service!</div></div><div class="cpi"><div style="display:flex;justify-content:space-between;"><div><strong>Sarah N.</strong> <span style="color:var(--accent);">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div><span style="font-size:11px;color:var(--text-light);">5d ago</span></div><div style="font-size:12px;">Best station in Kampala!</div></div></div></div>';
+}
+
+function rOA(){
+  document.getElementById('appTC').innerHTML='<div class="ag2"><div class="apc"><div class="apch"><h3>Sales by Fuel</h3></div><div class="apcb"><div style="height:220px;"><canvas id="opFSales"></canvas></div></div></div><div class="apc"><div class="apch"><h3>Traffic</h3></div><div class="apcb"><div style="height:220px;"><canvas id="opTraffic"></canvas></div></div></div></div>';
+  rChart('opFSales','doughnut',{labels:['Petrol','Diesel','Kerosene','LPG'],datasets:[{data:[55,30,10,5],backgroundColor:['#dc3545','#1b6b3f','#f4a300','#17a2b8']}]},{responsive:true,maintainAspectRatio:false});
+  rChart('opTraffic','bar',{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Customers',data:[142,156,138,165,172,198,185],backgroundColor:'#1a73e8'}]},{responsive:true,maintainAspectRatio:false});
+}
+
+function rGD(){
+  const tc=document.getElementById('appTC');
+  const recent=comps.filter(c=>c.status!=='resolved').slice(0,4);
+  tc.innerHTML='<div style="margin-bottom:12px;"><span class="badge" style="background:var(--accent);color:#000;padding:4px 12px;font-size:10px;text-transform:uppercase;"><i class="fas fa-shield-alt"></i> Official Gov System</span></div><div class="as"><div class="asc"><div class="asch"><div class="asci" style="background:#e8f0fe;color:#1a73e8;"><i class="fas fa-gas-pump"></i></div></div><div class="ascv">1,247</div><div class="ascl">Stations</div><div class="ascc up">+18</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#fef7e0;color:var(--accent);"><i class="fas fa-exclamation-triangle"></i></div></div><div class="ascv">47</div><div class="ascl">Active</div><div class="ascc down"><i class="fas fa-check"></i> 23 resolved</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#e6f4ea;color:var(--secondary);"><i class="fas fa-check-double"></i></div></div><div class="ascv">92%</div><div class="ascl">Compliance</div><div class="ascc up">+2.4%</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#fce8e6;color:var(--danger);"><i class="fas fa-search"></i></div></div><div class="ascv">8</div><div class="ascl">Investigations</div><div class="ascc"><span style="color:var(--accent);">3 new</span></div></div></div><div class="ag2"><div class="apc"><div class="apch"><h3><i class="fas fa-map-marked-alt"></i> Heat Map</h3></div><div class="apcb"><div style="height:220px;"><canvas id="gHeat"></canvas></div></div></div><div class="apc"><div class="apch"><h3><i class="fas fa-chart-line"></i> Trends</h3></div><div class="apcb"><div style="height:220px;"><canvas id="gTrend"></canvas></div></div></div></div><div class="ag2"><div class="apc"><div class="apch"><h3><i class="fas fa-exclamation-circle"></i> Recent Complaints</h3><button class="btn btn-sm btn-out" onclick="swAT(\'comps\',document.querySelector(\'.at:nth-child(2)\'))">Manage</button></div><div class="apcb">'+recent.map(c=>'<div class="cpi"><div class="cph"><div class="cpt" style="font-size:12px;">'+c.title+'</div><span class="badge '+(c.priority==='high'?'badge-r':'badge-o')+'">'+c.priority+'</span></div><div class="cpm"><span>'+c.reportedBy+'</span><span>'+c.district+'</span></div></div>').join('')||'<div class="emp"><p>No complaints</p></div>' +'</div></div><div class="apc"><div class="apch"><h3>Quick Reports</h3></div><div class="apcb"><div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;"><span><i class="fas fa-file-pdf" style="color:var(--danger);"></i> Monthly Report</span><span class="badge badge-b">PDF</span></div><div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;"><span><i class="fas fa-file-excel" style="color:var(--success);"></i> Complaints</span><span class="badge badge-g">XLSX</span></div><div style="padding:8px 0;"><span><i class="fas fa-chart-bar"></i> Regional Analysis</span><span class="badge badge-p">PDF</span></div></div></div></div>';
+  const rl=['Kampala','Wakiso','Mukono','Jinja','Gulu','Mbale','Mbarara'];
+  rChart('gHeat','bar',{labels:rl,datasets:[{label:'Petrol (UGX)',data:rl.map(()=>5100+Math.random()*500),backgroundColor:['#dc3545','#1a73e8','#1b6b3f','#f4a300','#7c3aed','#17a2b8','#fd7e14']}]},{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}}});
+  rChart('gTrend','line',{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'Petrol',data:Array.from({length:12},()=>5100+Math.random()*500),borderColor:'#dc3545',tension:0.4},{label:'Diesel',data:Array.from({length:12},()=>4900+Math.random()*400),borderColor:'#1b6b3f',tension:0.4}]},{responsive:true,maintainAspectRatio:false});
+}
+function rGC(){rMyC();}
+function rGI(){
+  document.getElementById('appTC').innerHTML='<div class="as" style="grid-template-columns:repeat(3,1fr);"><div class="asc" style="text-align:center;"><div style="font-size:28px;font-weight:800;">8</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-light);">Open</div></div><div class="asc" style="text-align:center;"><div style="font-size:28px;font-weight:800;">3</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-light);">Pending</div></div><div class="asc" style="text-align:center;"><div style="font-size:28px;font-weight:800;color:var(--success);">12</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-light);">Closed This Month</div></div></div><div class="apc"><div class="apch"><h3>Investigations</h3><button class="btn btn-sm btn-pri" onclick="openM(\'trackModal\')"><i class="fas fa-plus"></i> New</button></div><div class="apcb">'+invs.map(i=>'<div style="padding:12px;border-bottom:1px solid var(--border);"><div style="display:flex;justify-content:space-between;"><strong style="font-size:13px;">'+i.caseRef+'</strong><span class="badge '+(i.status==='open'?'badge-r':i.status==='pending'?'badge-o':'badge-g')+'">'+i.status+'</span></div><div style="font-size:12px;margin:4px 0;">'+i.station+'</div><div style="font-size:11px;color:var(--text-light);"><i class="fas fa-calendar"></i> '+fd(i.opened)+'</div></div>').join('')+'</div></div>';
+}
+
+function rGComp(){
+  document.getElementById('appTC').innerHTML='<div style="margin-bottom:16px;"><select class="form-control" style="width:auto;padding:8px 12px;font-size:12px;" onchange="mcf=this.value;rGComp()"><option value="all">All</option><option value="pending">Pending</option><option value="under-investigation">Investigation</option><option value="resolved">Resolved</option></select></div><div class="apc"><div class="apcb">'+comps.filter(c=>mcf==='all'||c.status===mcf).map(c=>'<div class="cpi"><div class="cph"><div class="cpt">'+c.title+'</div><span class="badge '+(c.status==='resolved'?'badge-g':c.status==='under-investigation'?'badge-b':'badge-o')+'">'+c.status+'</span></div><div class="cpm"><span><i class="fas fa-building"></i> '+c.station+'</span><span><i class="fas fa-map-pin"></i> '+c.district+'</span></div><div class="cpd">'+c.description+'</div><div style="margin-top:8px;"><button class="btn btn-sm btn-suc" onclick="alert(\'Marked resolved\')"><i class="fas fa-check"></i> Resolve</button><button class="btn btn-sm btn-out" style="margin-left:6px;" onclick="alert(\'Investigation started\')"><i class="fas fa-search"></i> Investigate</button></div></div>').join('')||'<div class="emp"><p>No complaints</p></div>' +'</div></div>';
+}
+
+function rGA(){
+  document.getElementById('appTC').innerHTML='<div class="ag2"><div class="apc"><div class="apch"><h3>Monthly Summary</h3></div><div class="apcb">'+[["Total Complaints","245","+12%","orange"],["Resolved","198","81%","green"],["Avg Response","3.2d","-0.5d","green"],["Pending","47","-8%","red"]].map(r=>'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);"><span>'+r[0]+'</span><span><strong>'+r[1]+'</strong> <span style="color:var(--'+r[3]+');font-size:11px;">'+r[2]+'</span></span></div>').join('')+'</div></div><div class="apc"><div class="apch"><h3>Compliance Rate</h3></div><div class="apcb"><div style="height:200px;"><canvas id="gComp"></canvas></div></div></div></div>';
+  rChart('gComp','radar',{labels:['Quality','Accuracy','Timeliness','Safety','Pricing'],datasets:[{label:'This Month',data:[92,88,85,95,90],borderColor:'#1b6b3f',backgroundColor:'rgba(27,107,63,0.2)'},{label:'Last Month',data:[88,85,80,92,87],borderColor:'#f4a300',backgroundColor:'rgba(244,163,0,0.2)'}]},{responsive:true,maintainAspectRatio:false});
+}
+
+function rGP(){
+  document.getElementById('appTC').innerHTML='<div style="margin-bottom:16px;display:flex;gap:8px;"><button class="btn btn-pri" onclick="alert(\'New policy form\')"><i class="fas fa-plus"></i> New Policy</button></div><div class="apc"><div class="apcb">'+pols.map(p=>'<div style="padding:12px;border-bottom:1px solid var(--border);"><div style="display:flex;justify-content:space-between;"><strong>'+p.title+'</strong><span class="badge '+(p.status==='active'?'badge-g':'badge-b')+'">'+p.status+'</span></div><div style="font-size:11px;color:var(--text-light);margin:4px 0;"><i class="fas fa-calendar"></i> Effective '+fd(p.effective)+'</div><div style="font-size:12px;">'+p.description.substring(0,120)+'...</div></div>').join('')+'</div></div>';
+}
+
+function rAD(){
+  const tc=document.getElementById('appTC');
+  tc.innerHTML='<div class="as"><div class="asc"><div class="asch"><div class="asci" style="background:#e8f0fe;color:#1a73e8;"><i class="fas fa-users"></i></div></div><div class="ascv">'+users.length+'</div><div class="ascl">Users</div><div class="ascc up">+4</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#e6f4ea;color:var(--secondary);"><i class="fas fa-gas-pump"></i></div></div><div class="ascv">'+st.length+'</div><div class="ascl">Stations</div><div class="ascc up">+2</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#fef7e0;color:var(--accent);"><i class="fas fa-exclamation-triangle"></i></div></div><div class="ascv">'+comps.length+'</div><div class="ascl">Complaints</div><div class="ascc down">+'+comps.filter(c=>c.status==='pending').length+' pending</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#fce8e6;color:var(--danger);"><i class="fas fa-chart-bar"></i></div></div><div class="ascv">92%</div><div class="ascl">Sys Health</div><div class="ascc up"><i class="fas fa-check-circle"></i></div></div></div><div class="ag2"><div class="apc"><div class="apch"><h3>Recent Logins</h3></div><div class="apcb">'+logs.slice(0,5).map(l=>'<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;display:flex;justify-content:space-between;"><span><strong>'+l.user+'</strong> <span style="color:var(--text-light);">('+l.action+')</span></span><span style="color:var(--text-light);">'+ta(l.time)+'</span></div>').join('')+'</div></div><div class="apc"><div class="apch"><h3>System Activity</h3></div><div class="apcb"><div style="height:160px;"><canvas id="aAct"></canvas></div></div></div></div>';
+  rChart('aAct','line',{labels:Array.from({length:7},(_,i)=>'D'+(i+1)),datasets:[{label:'Logins',data:[45,52,38,61,55,70,48],borderColor:'#1a73e8',tension:0.4,fill:false},{label:'Actions',data:[120,145,110,168,155,190,140],borderColor:'#1b6b3f',tension:0.4,fill:false}]},{responsive:true,maintainAspectRatio:false});
+}
+
+function rAU(){
+  document.getElementById('appTC').innerHTML='<div style="margin-bottom:16px;display:flex;gap:8px;"><button class="btn btn-pri" onclick="openM(\'userModal\')"><i class="fas fa-plus"></i> Add User</button><input class="form-control" style="width:200px;padding:8px 12px;font-size:12px;" placeholder="Search users..."></div><table class="app-table"><thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Status</th><th>Action</th></tr></thead><tbody>'+users.map(u=>'<tr><td><div style="display:flex;align-items:center;gap:8px;"><div class="aua '+u.avatar+'" style="width:28px;height:28px;font-size:11px;">'+u.name.charAt(0)+'</div>'+u.name+'</div></td><td><span style="text-transform:capitalize;">'+u.role+'</span></td><td style="font-size:12px;">'+u.email+'</td><td><span class="badge badge-g">Active</span></td><td><button class="btn btn-sm btn-out" onclick="alert(\'Edit user\')"><i class="fas fa-edit"></i></button></td></tr>').join('')+'</tbody></table>';
+}
+
+function rAS(){
+  document.getElementById('appTC').innerHTML='<div style="margin-bottom:16px;display:flex;gap:8px;"><button class="btn btn-pri" onclick="alert(\'Add station form\')"><i class="fas fa-plus"></i> Add Station</button><input class="form-control" style="width:200px;padding:8px 12px;" placeholder="Search stations..."></div><table class="app-table"><thead><tr><th>Name</th><th>District</th><th>Region</th><th>Status</th><th>Action</th></tr></thead><tbody>'+st.map(s=>'<tr><td>'+s.name+'</td><td>'+s.district+'</td><td>'+s.region+'</td><td><span class="badge badge-g">Active</span></td><td><button class="btn btn-sm btn-out" onclick="alert(\'Edit station\')"><i class="fas fa-edit"></i></button></td></tr>').join('')+'</tbody></table>';
+}
+
+function rAA(){
+  document.getElementById('appTC').innerHTML='<div class="apc"><div class="apcb">'+logs.map(l=>'<div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px;display:flex;justify-content:space-between;"><span><strong>'+l.user+'</strong> '+l.action+'</span><span style="color:var(--text-light);">'+ta(l.time)+'</span></div>').join('')+'</div></div>';
+}
+
+function trkComp(){
+  const id=document.getElementById('tCompId').value,res=document.getElementById('tRes');
+  if(!id){res.innerHTML='<div style="color:var(--danger);">Enter ref #</div>';return;}
+  const c=comps.find(x=>x.id===parseInt(id));
+  if(c){res.innerHTML='<div style="padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);"><h4>'+c.title+'</h4><p style="font-size:12px;">Status: <strong>'+c.status+'</strong></p><p style="font-size:12px;">Priority: '+c.priority+'</p><p style="font-size:12px;">Station: '+c.station+'</p><p style="font-size:12px;">Date: '+fd(c.date)+'</p></div>';}else{res.innerHTML='<div style="color:var(--danger);">Not found</div>';}
+}
+
+function addU(){
+  const n=document.getElementById('uName').value,e=document.getElementById('uEmail').value,r=document.getElementById('uRole').value;
+  if(!n||!e){alert('Fill all fields');return;}
+  users.push({id:users.length+1,name:n,email:e,role:r,avatar:r==='admin'?'purple':r==='operator'?'green':r==='government'?'blue':'orange'});
+  closeM('userModal');document.getElementById('uName').value='';document.getElementById('uEmail').value='';rAU();alert('User added!');
+}
+
+setTimeout(()=>{initMap();document.querySelectorAll('.cgc').forEach((c,i)=>{const f=FUEL[i%FUEL.length];rChart('catChart'+(i+1)+'a','bar',{labels:['Now','Avg'],datasets:[{data:[st[i]?.prices[f]||0,5100],backgroundColor:['#f4a300','#ccc']}]},{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'UGX '+ctx.parsed.y.toLocaleString()}}}});});},1500);
+
+</script></body></html>
