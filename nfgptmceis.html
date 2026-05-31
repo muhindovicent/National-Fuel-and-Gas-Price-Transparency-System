@@ -334,17 +334,17 @@ select.form-control{cursor:pointer}
     </div>
     <div class="hnav" id="mainNav">
       <a href="#" class="active"><i class="fas fa-home"></i> Home</a>
-      <a href="#" onclick="handleLogin()"><i class="fas fa-tachometer-alt"></i> Monitoring</a>
+      <a href="#" onclick="goLogin()"><i class="fas fa-tachometer-alt"></i> Monitoring</a>
       <a href="#" onclick="showPublic('stations')"><i class="fas fa-gas-pump"></i> Stations</a>
-      <a href="#" onclick="handleLogin()"><i class="fas fa-users"></i> Citizen Portal</a>
-      <a href="#" onclick="handleLogin()"><i class="fas fa-landmark"></i> Gov Portal</a>
-      <a href="#" onclick="handleLogin()"><i class="fas fa-chart-pie"></i> Reports</a>
-      <a href="#" onclick="handleLogin()"><i class="fas fa-newspaper"></i> News</a>
+      <a href="#" onclick="goLogin()"><i class="fas fa-users"></i> Citizen Portal</a>
+      <a href="#" onclick="goLogin()"><i class="fas fa-landmark"></i> Gov Portal</a>
+      <a href="#" onclick="goLogin()"><i class="fas fa-chart-pie"></i> Reports</a>
+      <a href="#" onclick="goLogin()"><i class="fas fa-newspaper"></i> News</a>
       <button class="hamb" onclick="document.getElementById('mainNav').classList.toggle('hamb-open')"><i class="fas fa-bars"></i></button>
     </div>
     <div class="hact">
-      <button class="btn-login" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-sign-in-alt"></i> Login</button>
-      <button class="btn-reg" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-user-plus"></i> Register</button>
+      <button class="btn-login" onclick="goLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+      <button class="btn-reg" onclick="goLogin()"><i class="fas fa-user-plus"></i> Register</button>
     </div>
   </div>
 </div>
@@ -357,10 +357,10 @@ select.form-control{cursor:pointer}
         <h2>National Fuel Price <span>Transparency & Monitoring</span> System</h2>
         <p>Uganda's central digital platform for real-time fuel price monitoring, citizen complaint management, regulatory oversight, and market intelligence â€” empowering every Ugandan with transparent fuel information.</p>
         <div class="hero-btns">
-          <a href="#" class="hb-pri" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chart-bar"></i> Compare Fuel Prices</a>
+          <a href="#" class="hb-pri" onclick="goLogin()"><i class="fas fa-chart-bar"></i> Compare Fuel Prices</a>
           <a href="#" class="hb-sec" onclick="showPublic('map')"><i class="fas fa-map-marker-alt"></i> Locate Stations</a>
-          <a href="#" class="hb-sec" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-exclamation-triangle"></i> Report Price Manipulation</a>
-          <a href="#" class="hb-sec" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-landmark"></i> Gov Responses</a>
+          <a href="#" class="hb-sec" onclick="goLogin()"><i class="fas fa-exclamation-triangle"></i> Report Price Manipulation</a>
+          <a href="#" class="hb-sec" onclick="goLogin()"><i class="fas fa-landmark"></i> Gov Responses</a>
         </div>
       </div>
       <div class="hero-stats">
@@ -393,18 +393,18 @@ select.form-control{cursor:pointer}
   <div class="cont">
     <div class="sec-title"><h2>System Services</h2><p>Comprehensive fuel monitoring and citizen engagement services</p></div>
     <div class="svc-grid">
-      <div class="svc-card" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><div class="svc-icon" style="background:#fef2f2;color:#dc3545;"><i class="fas fa-chart-line"></i></div><h3>Fuel Price Monitoring</h3><p>Real-time tracking of petrol, diesel, kerosene, and LPG prices across all regions of Uganda.</p></div>
+      <div class="svc-card" onclick="goLogin()"><div class="svc-icon" style="background:#fef2f2;color:#dc3545;"><i class="fas fa-chart-line"></i></div><h3>Fuel Price Monitoring</h3><p>Real-time tracking of petrol, diesel, kerosene, and LPG prices across all regions of Uganda.</p></div>
       <div class="svc-card" onclick="showPublic('map')"><div class="svc-icon" style="background:#eff6ff;color:#2563eb;"><i class="fas fa-map-marker-alt"></i></div><h3>Fuel Station Locator</h3><p>Find nearest fuel stations with current prices, availability, and ratings on an interactive map.</p></div>
       <div class="svc-card" onclick="showPublic('map')"><div class="svc-icon" style="background:#f0fdf4;color:var(--success);"><i class="fas fa-globe-africa"></i></div><h3>Interactive Uganda Map</h3><p>GIS-powered map showing all registered fuel stations with district-level price filtering.</p></div>
-      <div class="svc-card" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><div class="svc-icon" style="background:#fffbeb;color:var(--accent);"><i class="fas fa-exclamation-circle"></i></div><h3>Submit a Complaint</h3><p>Report price overcharging, fuel quality issues, station misconduct, or pump tampering.</p></div>
-      <div class="svc-card" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><div class="svc-icon" style="background:#f3e8ff;color:#7c3aed;"><i class="fas fa-comments"></i></div><h3>Community Forum</h3><p>Engage in discussions about fuel prices, share experiences, and voice concerns with fellow Ugandans.</p></div>
-      <div class="svc-card" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><div class="svc-icon" style="background:#e0f7fa;color:#00838f;"><i class="fas fa-landmark"></i></div><h3>Government Response Center</h3><p>View official responses to complaints, regulatory actions, and public notices from the Ministry.</p></div>
-      <div class="svc-card" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><div class="svc-icon" style="background:#fce8e6;color:var(--danger);"><i class="fas fa-shield-alt"></i></div><h3>Regulatory Compliance</h3><p>Track station compliance with UNBS fuel quality standards and licensing requirements.</p></div>
-      <div class="svc-card" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><div class="svc-icon" style="background:#e8f5e9;color:#2e7d32;"><i class="fas fa-chart-pie"></i></div><h3>Fuel Analytics</h3><p>Access market intelligence, trend analysis, regional comparisons, and predictive forecasting.</p></div>
-      <div class="svc-card" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><div class="svc-icon" style="background:#fff3e0;color:#ff9800;"><i class="fas fa-bell"></i></div><h3>Price Alerts</h3><p>Set price thresholds and receive notifications when fuel prices change in your preferred stations.</p></div>
-      <div class="svc-card" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><div class="svc-icon" style="background:#e3f2fd;color:#1565c0;"><i class="fas fa-truck"></i></div><h3>Fuel Availability</h3><p>Monitor fuel stock levels and shortage reports across all regions and major transport routes.</p></div>
-      <div class="svc-card" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><div class="svc-icon" style="background:#fce4ec;color:#c62828;"><i class="fas fa-star"></i></div><h3>Station Ratings</h3><p>Rate and review fuel stations based on price fairness, service quality, and product authenticity.</p></div>
-      <div class="svc-card" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><div class="svc-icon" style="background:#e8f0fe;color:#1a73e8;"><i class="fas fa-search"></i></div><h3>Investigation Tracking</h3><p>Follow the status of ongoing price manipulation and fuel quality investigations in real time.</p></div>
+      <div class="svc-card" onclick="goLogin()"><div class="svc-icon" style="background:#fffbeb;color:var(--accent);"><i class="fas fa-exclamation-circle"></i></div><h3>Submit a Complaint</h3><p>Report price overcharging, fuel quality issues, station misconduct, or pump tampering.</p></div>
+      <div class="svc-card" onclick="goLogin('forum')"><div class="svc-icon" style="background:#f3e8ff;color:#7c3aed;"><i class="fas fa-comments"></i></div><h3>Community Forum</h3><p>Engage in discussions about fuel prices, share experiences, and voice concerns with fellow Ugandans.</p></div>
+      <div class="svc-card" onclick="goLogin()"><div class="svc-icon" style="background:#e0f7fa;color:#00838f;"><i class="fas fa-landmark"></i></div><h3>Government Response Center</h3><p>View official responses to complaints, regulatory actions, and public notices from the Ministry.</p></div>
+      <div class="svc-card" onclick="goLogin()"><div class="svc-icon" style="background:#fce8e6;color:var(--danger);"><i class="fas fa-shield-alt"></i></div><h3>Regulatory Compliance</h3><p>Track station compliance with UNBS fuel quality standards and licensing requirements.</p></div>
+      <div class="svc-card" onclick="goLogin()"><div class="svc-icon" style="background:#e8f5e9;color:#2e7d32;"><i class="fas fa-chart-pie"></i></div><h3>Fuel Analytics</h3><p>Access market intelligence, trend analysis, regional comparisons, and predictive forecasting.</p></div>
+      <div class="svc-card" onclick="goLogin()"><div class="svc-icon" style="background:#fff3e0;color:#ff9800;"><i class="fas fa-bell"></i></div><h3>Price Alerts</h3><p>Set price thresholds and receive notifications when fuel prices change in your preferred stations.</p></div>
+      <div class="svc-card" onclick="goLogin()"><div class="svc-icon" style="background:#e3f2fd;color:#1565c0;"><i class="fas fa-truck"></i></div><h3>Fuel Availability</h3><p>Monitor fuel stock levels and shortage reports across all regions and major transport routes.</p></div>
+      <div class="svc-card" onclick="goLogin()"><div class="svc-icon" style="background:#fce4ec;color:#c62828;"><i class="fas fa-star"></i></div><h3>Station Ratings</h3><p>Rate and review fuel stations based on price fairness, service quality, and product authenticity.</p></div>
+      <div class="svc-card" onclick="goLogin()"><div class="svc-icon" style="background:#e8f0fe;color:#1a73e8;"><i class="fas fa-search"></i></div><h3>Investigation Tracking</h3><p>Follow the status of ongoing price manipulation and fuel quality investigations in real time.</p></div>
     </div>
   </div>
 </div>
@@ -448,8 +448,8 @@ select.form-control{cursor:pointer}
         <div class="comm-topic"><div class="ct-head"><span class="ct-title">Government should regulate fuel margins</span><span class="ct-cat">Complaints</span></div><div class="ct-text">The price differences between stations are too wide. The government needs to step in and regulate profit margins to protect consumers.</div><div class="ct-meta"><span><i class="fas fa-user"></i> Peter Ochen</span><span><i class="fas fa-heart"></i> 42</span><span><i class="fas fa-reply"></i> 15 replies</span></div></div>
       </div>
       <div class="comm-side">
-        <div class="cs-card"><h4><i class="fas fa-comment-dots" style="color:var(--accent);"></i> Join the Discussion</h4><p>Share your fuel experiences, report concerns, and engage with fellow Ugandans.</p><button class="btn-pri" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-comments"></i> Join Now</button></div>
-        <div class="cs-card"><h4><i class="fas fa-exclamation-triangle" style="color:var(--danger);"></i> Report an Issue</h4><p>Experienced price manipulation or poor fuel quality? Report it instantly.</p><button style="background:var(--danger);color:#fff;" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-exclamation-circle"></i> Report Now</button></div>
+        <div class="cs-card"><h4><i class="fas fa-comment-dots" style="color:var(--accent);"></i> Join the Discussion</h4><p>Share your fuel experiences, report concerns, and engage with fellow Ugandans.</p><button class="btn-pri" onclick="goLogin('forum')"><i class="fas fa-comments"></i> Join Now</button></div>
+        <div class="cs-card"><h4><i class="fas fa-exclamation-triangle" style="color:var(--danger);"></i> Report an Issue</h4><p>Experienced price manipulation or poor fuel quality? Report it instantly.</p><button style="background:var(--danger);color:#fff;" onclick="goLogin()"><i class="fas fa-exclamation-circle"></i> Report Now</button></div>
       </div>
     </div>
   </div>
@@ -477,15 +477,15 @@ select.form-control{cursor:pointer}
     </div>
     <div class="fc">
       <h4><i class="fas fa-chart-line"></i> Fuel Monitoring</h4>
-      <ul><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Live Fuel Prices</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> National Dashboard</a></li><li><a href="#" onclick="showPublic('stations')"><i class="fas fa-chevron-right"></i> Station Directory</a></li><li><a href="#" onclick="showPublic('map')"><i class="fas fa-chevron-right"></i> Station Map</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Price History</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Fuel Availability</a></li></ul>
+      <ul><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Live Fuel Prices</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> National Dashboard</a></li><li><a href="#" onclick="showPublic('stations')"><i class="fas fa-chevron-right"></i> Station Directory</a></li><li><a href="#" onclick="showPublic('map')"><i class="fas fa-chevron-right"></i> Station Map</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Price History</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Fuel Availability</a></li></ul>
     </div>
     <div class="fc">
       <h4><i class="fas fa-users"></i> Citizen Services</h4>
-      <ul><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Submit Complaint</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Track Complaint</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Price Alerts</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Community Forum</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Report Issue</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Station Ratings</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> FAQ</a></li></ul>
+      <ul><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Submit Complaint</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Track Complaint</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Price Alerts</a></li><li><a href="#" onclick="goLogin('forum')"><i class="fas fa-chevron-right"></i> Community Forum</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Report Issue</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Station Ratings</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> FAQ</a></li></ul>
     </div>
     <div class="fc">
       <h4><i class="fas fa-landmark"></i> Government Services</h4>
-      <ul><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> National Dashboard</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Complaints Management</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Investigations</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Compliance Reports</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Policy Center</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Market Analysis</a></li><li><a href="#" onclick="document.getElementById('loginOverlay').classList.remove('hidden')"><i class="fas fa-chevron-right"></i> Data Export</a></li></ul>
+      <ul><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> National Dashboard</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Complaints Management</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Investigations</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Compliance Reports</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Policy Center</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Market Analysis</a></li><li><a href="#" onclick="goLogin()"><i class="fas fa-chevron-right"></i> Data Export</a></li></ul>
     </div>
     <div class="fc">
       <h4><i class="fas fa-phone-alt"></i> Contact</h4>
@@ -626,14 +626,17 @@ const ROLE_LIST=['bodaboda','truck','taxi','pvo','citizen','operator','governmen
 function handleLogin(){
   cr=slr;
   cu={name:UNAMES[cr],email:document.getElementById('loginEmail').value.trim(),role:cr,avatar:'ac'+(ROLE_LIST.indexOf(cr)+1)};
+  localStorage.setItem('nfcu',JSON.stringify(cu));
+  localStorage.setItem('nfcr',cr);
   document.getElementById('loginOverlay').classList.add('hidden');
   document.getElementById('appInterface').classList.add('active');
   initApp();
 }
 function handleLogout(){
   document.getElementById('appInterface').classList.remove('active');
-  document.getElementById('loginOverlay').classList.remove('hidden');
   cu=null;
+  localStorage.removeItem('nfcu');
+  localStorage.removeItem('nfcr');
 }
 function initApp(){
   initD();
@@ -641,6 +644,16 @@ function initApp(){
   document.getElementById('appUN').textContent=cu.name;
   document.getElementById('appUR').textContent=ROLES[cr];
   updNB(); rAppDash();
+}
+function goLogin(tab){
+  if(cu){
+    document.getElementById('loginOverlay').classList.add('hidden');
+    document.getElementById('appInterface').classList.add('active');
+    initApp();
+    if(tab) setTimeout(()=>swAT(tab,document.querySelector('.at:last-child')),50);
+  } else {
+    document.getElementById('loginOverlay').classList.remove('hidden');
+  }
 }
 function showPublic(p){
   if(p==='map'&&mapI) setTimeout(()=>mapI.invalidateSize(),100);
@@ -823,6 +836,19 @@ rChart('skAct','bar',{labels:roles.map(r=>r[0].substring(0,6)),datasets:[{label:
 function rSM(){const tc=document.getElementById('appTC');tc.innerHTML='<div style="margin-bottom:8px;"><span class="badge" style="background:var(--accent);color:#000;padding:4px 12px;font-size:10px;text-transform:uppercase;"><i class="fas fa-flag"></i> National Command Center</span></div><div class="as"><div class="asc"><div class="asch"><div class="asci" style="background:#eff6ff;color:#2563eb;"><i class="fas fa-users"></i></div></div><div class="ascv">1,247</div><div class="ascl">Total Stakeholders</div><div class="ascc up">+28 this month</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#fffbeb;color:var(--accent);"><i class="fas fa-exclamation-triangle"></i></div></div><div class="ascv">'+comps.length+'</div><div class="ascl">Complaints Active</div><div class="ascc down">'+comps.filter(c=>c.status==='pending').length+' pending</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#f0fdf4;color:var(--success);"><i class="fas fa-check-double"></i></div></div><div class="ascv">92%</div><div class="ascl">System Compliance</div><div class="ascc up">+2.4%</div></div><div class="asc"><div class="asch"><div class="asci" style="background:#fce8e6;color:var(--danger);"><i class="fas fa-star"></i></div></div><div class="ascv">4.2</div><div class="ascl">Avg Engagement Score</div><div class="ascc up">+0.3</div></div></div><div class="ag2"><div class="apc"><div class="apch"><h3><i class="fas fa-chart-line"></i> National Performance Metrics</h3></div><div class="apcb"><div style="height:200px;"><canvas id="smPerf"></canvas></div></div></div><div class="apc"><div class="apch"><h3><i class="fas fa-list"></i> Stakeholder KPIs</h3></div><div class="apcb"><div>'+[["Boda Boda Engagement","78%","+12%","green"],["Truck Driver Reporting","65%","+8%","green"],["Station Compliance","92%","+3%","green"],["Investigation Closure","82%","-5%","red"],["Citizen Satisfaction","87%","+6%","green"]].map(k=>'<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px;"><span>'+k[0]+'</span><span><strong>'+k[1]+'</strong> <span style="color:var(--'+k[3]+');margin-left:6px;">'+k[2]+'</span></span></div>').join('')+'</div></div></div></div>';rChart('smPerf','line',{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'Compliance',data:[85,88,87,90,91,92],borderColor:'#008751',tension:0.3},{label:'Engagement',data:[65,68,72,75,78,82],borderColor:'#F5A623',tension:0.3}]});}
 function rSP(){document.getElementById('appTC').innerHTML='<div class="ag2"><div class="apc"><div class="apch"><h3>Stakeholder Performance Dashboard</h3></div><div class="apcb">'+[["Boda Boda Riders","92","1,247","4.5","85%","up"],["Truck Drivers","78","456","4.2","72%","up"],["Taxi/Bus Operators","85","312","4.0","78%","down"],["Private Owners","88","2,134","4.3","81%","up"],["Citizens","90","5,678","4.1","86%","up"],["Operators","95","47","4.2","92%","up"],["Gov Officials","82","24","3.9","79%","down"]].map(p=>'<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:12px;"><div><strong>'+p[0]+'</strong><br><span style="font-size:10px;color:var(--text-light);">'+p[2]+' users</span></div><div style="text-align:center;"><span style="font-size:10px;color:var(--text-light);">Satisfaction</span><br><strong>'+p[3]+'</strong></div><div style="text-align:center;"><span style="font-size:10px;color:var(--text-light);">Score</span><br><strong style="color:'+(p[5]==='up'?'var(--success)':'var(--danger)')+';">'+p[1]+'%</strong></div><div style="text-align:right;"><span class="badge badge-g">'+p[4]+'</span></div></div>').join('')+'</div></div><div class="apc"><div class="apch"><h3>System Health</h3></div><div class="apcb"><div style="height:160px;"><canvas id="spChart"></canvas></div></div></div></div>';rChart('spChart','radar',{labels:['Boda Boda','Truck','Taxi/Bus','PVO','Citizen','Operator','Gov'],datasets:[{label:'Performance Score',data:[92,78,85,88,90,95,82],borderColor:'#008751',backgroundColor:'rgba(0,135,81,0.2)'},{label:'Engagement Rate',data:[85,72,78,81,86,92,79],borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.2)'}]});}
 
+initD();
+(function(){
+  const s=localStorage.getItem('nfcu');
+  if(s){
+    try{
+      cu=JSON.parse(s);
+      cr=localStorage.getItem('nfcr')||cu.role;
+      document.getElementById('loginOverlay').classList.add('hidden');
+      document.getElementById('appInterface').classList.add('active');
+      initApp();
+    }catch(e){localStorage.removeItem('nfcu');localStorage.removeItem('nfcr');}
+  }
+})();
 setTimeout(()=>{
   initMap();
   document.querySelectorAll('.svc-card').forEach((c,i)=>{const f=FUEL[i%FUEL.length];rChart('catChart'+(i+1)+'a','bar',{labels:['Now','Avg'],datasets:[{data:[st[i]?.prices[f]||0,5100],backgroundColor:['#F5A623','#ccc']}]},{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'UGX '+ctx.parsed.y.toLocaleString()}}}});});
