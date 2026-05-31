@@ -174,6 +174,7 @@ a{text-decoration:none;color:inherit}
 .login-box .lb-foot{text-align:center;margin-top:16px;font-size:11px;color:rgba(255,255,255,0.3)}
 .app-interface{display:none;min-height:100vh;background:var(--bg)}
 .app-interface.active{display:block}
+#publicContent.hidden{display:none}
 .app-top{background:var(--bg-card);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:1500}
 .app-top .at-av{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
 .app-top .at-info{flex:1}
@@ -351,6 +352,7 @@ select.form-control{cursor:pointer}
   </div>
 </div>
 
+<div id="publicContent">
 <!-- HERO -->
 <div class="hero">
   <div class="cont">
@@ -500,6 +502,7 @@ select.form-control{cursor:pointer}
   </div>
   <div class="fbot"><div class="cont"><div>&copy; 2026 National Fuel Price Transparency & Citizen Engagement Information System. Ministry of Energy & Mineral Development, Republic of Uganda. All Rights Reserved.</div><div class="fbl"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Accessibility</a><a href="#">Sitemap</a></div></div></div>
 </div>
+</div>
 
 <!-- LOGIN OVERLAY -->
 <div class="login-overlay" id="loginOverlay">
@@ -632,6 +635,7 @@ function handleLogin(){
   localStorage.setItem('nfcu',JSON.stringify(cu));
   localStorage.setItem('nfcr',cr);
   updateHeader();
+  document.getElementById('publicContent').classList.add('hidden');
   document.getElementById('loginOverlay').classList.add('hidden');
   document.getElementById('appInterface').classList.add('active');
   initApp();
@@ -639,6 +643,7 @@ function handleLogin(){
 }
 function handleLogout(){
   document.getElementById('appInterface').classList.remove('active');
+  document.getElementById('publicContent').classList.remove('hidden');
   cu=null;
   localStorage.removeItem('nfcu');
   localStorage.removeItem('nfcr');
@@ -661,6 +666,7 @@ function updateHeader(){
 function goLogin(tab){
   pendingTab=tab||null;
   if(cu){
+    document.getElementById('publicContent').classList.add('hidden');
     document.getElementById('loginOverlay').classList.add('hidden');
     document.getElementById('appInterface').classList.add('active');
     initApp();
@@ -671,6 +677,7 @@ function goLogin(tab){
 }
 function showPublic(p){
   if(p==='map'&&mapI) setTimeout(()=>mapI.invalidateSize(),100);
+  document.getElementById('publicContent').classList.remove('hidden');
   document.getElementById('loginOverlay').classList.add('hidden');
   document.getElementById('appInterface').classList.remove('active');
   if(p==='map'&&mapI) setTimeout(()=>mapI.invalidateSize(),200);
@@ -858,6 +865,7 @@ initD();
       cu=JSON.parse(s);
       cr=localStorage.getItem('nfcr')||cu.role;
       updateHeader();
+      document.getElementById('publicContent').classList.add('hidden');
       document.getElementById('loginOverlay').classList.add('hidden');
       document.getElementById('appInterface').classList.add('active');
       initApp();
