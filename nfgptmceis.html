@@ -342,9 +342,11 @@ select.form-control{cursor:pointer}
       <a href="#" onclick="goLogin()"><i class="fas fa-newspaper"></i> News</a>
       <button class="hamb" onclick="document.getElementById('mainNav').classList.toggle('hamb-open')"><i class="fas fa-bars"></i></button>
     </div>
-    <div class="hact">
-      <button class="btn-login" onclick="goLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
-      <button class="btn-reg" onclick="goLogin()"><i class="fas fa-user-plus"></i> Register</button>
+    <div class="hact" id="hdrAct">
+      <button class="btn-login" onclick="goLogin()" id="hdrLogin"><i class="fas fa-sign-in-alt"></i> Login</button>
+      <button class="btn-reg" onclick="goLogin()" id="hdrReg"><i class="fas fa-user-plus"></i> Register</button>
+      <button class="btn-login" onclick="goLogin()" id="hdrDash" style="display:none"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+      <button class="btn-reg" onclick="handleLogout()" id="hdrLogout" style="display:none"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
   </div>
 </div>
@@ -629,6 +631,7 @@ function handleLogin(){
   cu={name:UNAMES[cr],email:document.getElementById('loginEmail').value.trim(),role:cr,avatar:'ac'+(ROLE_LIST.indexOf(cr)+1)};
   localStorage.setItem('nfcu',JSON.stringify(cu));
   localStorage.setItem('nfcr',cr);
+  updateHeader();
   document.getElementById('loginOverlay').classList.add('hidden');
   document.getElementById('appInterface').classList.add('active');
   initApp();
@@ -639,6 +642,7 @@ function handleLogout(){
   cu=null;
   localStorage.removeItem('nfcu');
   localStorage.removeItem('nfcr');
+  updateHeader();
 }
 function initApp(){
   initD();
@@ -646,6 +650,13 @@ function initApp(){
   document.getElementById('appUN').textContent=cu.name;
   document.getElementById('appUR').textContent=ROLES[cr];
   updNB(); rAppDash();
+}
+function updateHeader(){
+  const s=!!cu;
+  document.getElementById('hdrLogin').style.display=s?'none':'flex';
+  document.getElementById('hdrReg').style.display=s?'none':'flex';
+  document.getElementById('hdrDash').style.display=s?'flex':'none';
+  document.getElementById('hdrLogout').style.display=s?'flex':'none';
 }
 function goLogin(tab){
   pendingTab=tab||null;
@@ -846,6 +857,7 @@ initD();
     try{
       cu=JSON.parse(s);
       cr=localStorage.getItem('nfcr')||cu.role;
+      updateHeader();
       document.getElementById('loginOverlay').classList.add('hidden');
       document.getElementById('appInterface').classList.add('active');
       initApp();
