@@ -11,8 +11,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root{--primary:#0F2D52;--primary-light:#1a3f6a;--primary-dark:#091b33;--secondary:#008751;--secondary-light:#00a864;--accent:#F5A623;--accent-light:#ffc34d;--danger:#D32F2F;--success:#2e7d32;--warning:#f59e0b;--bg:#F5F7FA;--bg-card:#fff;--text:#111827;--text-light:#6b7280;--text-muted:#9ca3af;--border:#e5e7eb;--shadow:0 1px 3px rgba(0,0,0,0.08);--shadow-lg:0 10px 40px rgba(0,0,0,0.12);--radius:8px;--radius-lg:12px;--radius-xl:16px;--font:'Inter',sans-serif;--mw:1280px;--transition:all 0.3s ease}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;touch-action:manipulation}
 .cont{max-width:var(--mw);margin:0 auto;padding:0 20px}
 a{text-decoration:none;color:inherit}
 ::selection{background:var(--primary);color:#fff}
@@ -653,8 +653,7 @@ const ROLE_LIST=['bodaboda','truck','taxi','pvo','citizen','operator','governmen
 function handleLogin(){
   cr=slr;
   cu={name:UNAMES[cr],email:document.getElementById('loginEmail').value.trim(),role:cr,avatar:'ac'+(ROLE_LIST.indexOf(cr)+1)};
-  localStorage.setItem('nfcu',JSON.stringify(cu));
-  localStorage.setItem('nfcr',cr);
+  try{localStorage.setItem('nfcu',JSON.stringify(cu));localStorage.setItem('nfcr',cr);}catch(e){}
   updateHeader();
   document.getElementById('publicContent').classList.add('hidden');
   document.getElementById('loginOverlay').classList.add('hidden');
@@ -666,8 +665,7 @@ function handleLogout(){
   document.getElementById('appInterface').classList.remove('active');
   document.getElementById('publicContent').classList.remove('hidden');
   cu=null;
-  localStorage.removeItem('nfcu');
-  localStorage.removeItem('nfcr');
+  try{localStorage.removeItem('nfcu');localStorage.removeItem('nfcr');}catch(e){}
   updateHeader();
 }
 function initApp(){
@@ -727,12 +725,14 @@ function rNP(){document.getElementById('npList').innerHTML=notifs.map(n=>'<div c
 function mNR(id){const n=notifs.find(x=>x.id===id);if(n){n.read=true;updNB();rNP();}}
 
 function rChart(id,type,data,opts){
+  if(typeof Chart==='undefined')return;
   if(ch[id]){ch[id].destroy();delete ch[id];}
   const ctx=document.getElementById(id);if(!ctx)return;
-  ch[id]=new Chart(ctx,{type,data,options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:9,family:"Inter"}}}},...opts}});
+  try{ch[id]=new Chart(ctx,{type,data,options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:9,family:"Inter"}}}},...opts}});}catch(e){}
 }
 
 function initMap(){
+  if(typeof L==='undefined'){if(!document.getElementById('appTC'))return;document.getElementById('appTC').innerHTML='<div class="apc"><div class="apcb"><p style="text-align:center;padding:30px;color:var(--text-light);"><i class="fas fa-map" style="font-size:30px;display:block;margin-bottom:10px;"></i> Map library unavailable offline. Connect to the internet and reload.</p></div></div>';return;}
   const pc=document.getElementById('publicContent');
   const inApp=pc&&pc.classList.contains('hidden');
   if(inApp){
@@ -905,26 +905,32 @@ function rSM(){const tc=document.getElementById('appTC');tc.innerHTML='<div styl
 function rSP(){document.getElementById('appTC').innerHTML='<div class="ag2"><div class="apc"><div class="apch"><h3>Stakeholder Performance Dashboard</h3></div><div class="apcb">'+[["Boda Boda Riders","92","1,247","4.5","85%","up"],["Truck Drivers","78","456","4.2","72%","up"],["Taxi/Bus Operators","85","312","4.0","78%","down"],["Private Owners","88","2,134","4.3","81%","up"],["Citizens","90","5,678","4.1","86%","up"],["Operators","95","47","4.2","92%","up"],["Gov Officials","82","24","3.9","79%","down"]].map(p=>'<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:12px;"><div><strong>'+p[0]+'</strong><br><span style="font-size:10px;color:var(--text-light);">'+p[2]+' users</span></div><div style="text-align:center;"><span style="font-size:10px;color:var(--text-light);">Satisfaction</span><br><strong>'+p[3]+'</strong></div><div style="text-align:center;"><span style="font-size:10px;color:var(--text-light);">Score</span><br><strong style="color:'+(p[5]==='up'?'var(--success)':'var(--danger)')+';">'+p[1]+'%</strong></div><div style="text-align:right;"><span class="badge badge-g">'+p[4]+'</span></div></div>').join('')+'</div></div><div class="apc"><div class="apch"><h3>System Health</h3></div><div class="apcb"><div style="height:160px;"><canvas id="spChart"></canvas></div></div></div></div>';rChart('spChart','radar',{labels:['Boda Boda','Truck','Taxi/Bus','PVO','Citizen','Operator','Gov'],datasets:[{label:'Performance Score',data:[92,78,85,88,90,95,82],borderColor:'#008751',backgroundColor:'rgba(0,135,81,0.2)'},{label:'Engagement Rate',data:[85,72,78,81,86,92,79],borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.2)'}]});}
 
 initD();
-(function(){
-  const s=localStorage.getItem('nfcu');
-  if(s){
-    try{
-      cu=JSON.parse(s);
-      cr=localStorage.getItem('nfcr')||cu.role;
-      updateHeader();
-      document.getElementById('publicContent').classList.add('hidden');
-      document.getElementById('loginOverlay').classList.add('hidden');
-      document.getElementById('appInterface').classList.add('active');
-      initApp();
-    }catch(e){localStorage.removeItem('nfcu');localStorage.removeItem('nfcr');}
-  }
-})();
+try{
+  (function(){
+    const s=localStorage.getItem('nfcu');
+    if(s){
+      try{
+        cu=JSON.parse(s);
+        cr=localStorage.getItem('nfcr')||cu.role;
+        updateHeader();
+        document.getElementById('publicContent').classList.add('hidden');
+        document.getElementById('loginOverlay').classList.add('hidden');
+        document.getElementById('appInterface').classList.add('active');
+        initApp();
+      }catch(e){try{localStorage.removeItem('nfcu');localStorage.removeItem('nfcr');}catch(e2){}}
+    }
+  })();
+}catch(e){}
 setTimeout(()=>{
-  initMap();
-  document.querySelectorAll('.svc-card').forEach((c,i)=>{const f=FUEL[i%FUEL.length];rChart('catChart'+(i+1)+'a','bar',{labels:['Now','Avg'],datasets:[{data:[st[i]?.prices[f]||0,5100],backgroundColor:['#F5A623','#ccc']}]},{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'UGX '+ctx.parsed.y.toLocaleString()}}}});});
-  rChart('analVol','line',{labels:Array.from({length:30},(_,i)=>'D'+(i+1)),datasets:[{label:'Petrol Volatility',data:Array.from({length:30},()=>5200+Math.random()*500),borderColor:'#008751',tension:0.3,fill:true,backgroundColor:'rgba(0,135,81,0.1)'}]});
-  rChart('analReg','pie',{labels:REGS,datasets:[{data:[35,28,22,15],backgroundColor:['#dc3545','#008751','#F5A623','#2563eb']}]});
-  rChart('analComp','bar',{labels:['Overcharging','Quality','Misconduct','Manipulation','Tampering','Other'],datasets:[{label:'Complaints',data:[8,5,4,3,2,2],backgroundColor:'#F5A623'}]});
-  rChart('analComp2','bar',{labels:REGS,datasets:[{label:'Compliance %',data:[94,88,91,85],backgroundColor:'#008751'}]});
+  try{
+    if(typeof L!=='undefined')initMap();
+    if(typeof Chart!=='undefined'){
+      document.querySelectorAll('.svc-card').forEach((c,i)=>{const f=FUEL[i%FUEL.length];rChart('catChart'+(i+1)+'a','bar',{labels:['Now','Avg'],datasets:[{data:[st[i]?.prices[f]||0,5100],backgroundColor:['#F5A623','#ccc']}]},{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'UGX '+ctx.parsed.y.toLocaleString()}}}});});
+      rChart('analVol','line',{labels:Array.from({length:30},(_,i)=>'D'+(i+1)),datasets:[{label:'Petrol Volatility',data:Array.from({length:30},()=>5200+Math.random()*500),borderColor:'#008751',tension:0.3,fill:true,backgroundColor:'rgba(0,135,81,0.1)'}]});
+      rChart('analReg','pie',{labels:REGS,datasets:[{data:[35,28,22,15],backgroundColor:['#dc3545','#008751','#F5A623','#2563eb']}]});
+      rChart('analComp','bar',{labels:['Overcharging','Quality','Misconduct','Manipulation','Tampering','Other'],datasets:[{label:'Complaints',data:[8,5,4,3,2,2],backgroundColor:'#F5A623'}]});
+      rChart('analComp2','bar',{labels:REGS,datasets:[{label:'Compliance %',data:[94,88,91,85],backgroundColor:'#008751'}]});
+    }
+  }catch(e){}
 },1500);
 </script></body></html>
