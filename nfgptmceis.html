@@ -579,7 +579,7 @@ select.form-control{cursor:pointer}
     <div id="loginError" style="text-align:center;font-size:11px;color:var(--danger);margin-bottom:8px;display:none;"></div>
     <div class="fg"><label><i class="fas fa-envelope"></i> Email / Username</label><input type="text" id="loginEmail" placeholder="Enter your email" value="citizen@example.com" onkeydown="if(event.key==='Enter')handleLogin()"></div>
     <div class="fg"><label><i class="fas fa-lock"></i> Password</label><div style="position:relative;display:flex;align-items:center;"><input type="password" id="loginPassword" placeholder="Enter your password" value="password123" style="flex:1;padding-right:36px;" onkeydown="if(event.key==='Enter')handleLogin()"><span onclick="var p=document.getElementById('loginPassword');p.type=p.type==='password'?'text':'password';this.classList.toggle('fa-eye');this.classList.toggle('fa-eye-slash')" class="fas fa-eye" style="position:absolute;right:12px;color:rgba(255,255,255,0.4);cursor:pointer;font-size:14px;z-index:2;"></span></div></div>
-    <button class="btn-pri" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Sign In to Your Dashboard</button>
+    <button class="btn-pri" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In to Your Dashboard</button>
     <div class="lb-foot">&copy; 2026 Ministry of Energy & Mineral Development, Uganda &middot; NFPTCEIS v4.0</div>
   </div>
 </div>
@@ -944,6 +944,16 @@ function rSM(){const tc=document.getElementById('appTC');tc.innerHTML='<div styl
 function rSP(){document.getElementById('appTC').innerHTML='<div class="ag2"><div class="apc"><div class="apch"><h3>Stakeholder Performance Dashboard</h3></div><div class="apcb">'+[["Boda Boda Riders","92","1,247","4.5","85%","up"],["Truck Drivers","78","456","4.2","72%","up"],["Taxi/Bus Operators","85","312","4.0","78%","down"],["Private Owners","88","2,134","4.3","81%","up"],["Citizens","90","5,678","4.1","86%","up"],["Operators","95","47","4.2","92%","up"],["Gov Officials","82","24","3.9","79%","down"]].map(p=>'<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:12px;"><div><strong>'+p[0]+'</strong><br><span style="font-size:10px;color:var(--text-light);">'+p[2]+' users</span></div><div style="text-align:center;"><span style="font-size:10px;color:var(--text-light);">Satisfaction</span><br><strong>'+p[3]+'</strong></div><div style="text-align:center;"><span style="font-size:10px;color:var(--text-light);">Score</span><br><strong style="color:'+(p[5]==='up'?'var(--success)':'var(--danger)')+';">'+p[1]+'%</strong></div><div style="text-align:right;"><span class="badge badge-g">'+p[4]+'</span></div></div>').join('')+'</div></div><div class="apc"><div class="apch"><h3>System Health</h3></div><div class="apcb"><div style="height:160px;"><canvas id="spChart"></canvas></div></div></div></div>';rChart('spChart','radar',{labels:['Boda Boda','Truck','Taxi/Bus','PVO','Citizen','Operator','Gov'],datasets:[{label:'Performance Score',data:[92,78,85,88,90,95,82],borderColor:'#008751',backgroundColor:'rgba(0,135,81,0.2)'},{label:'Engagement Rate',data:[85,72,78,81,86,92,79],borderColor:'#F5A623',backgroundColor:'rgba(245,166,35,0.2)'}]});}
 
 window.onerror=function(m,u,l){try{document.getElementById('loginError').textContent='JS:'+m;document.getElementById('loginError').style.display='block';}catch(e){console.error(m,u,l);}};
+(function(){
+  var lb=document.getElementById('loginBtn');
+  if(lb){
+    lb.addEventListener('click',function(e){e.preventDefault();handleLogin();});
+    lb.addEventListener('touchend',function(e){e.preventDefault();handleLogin();});
+  }
+  if(!document.getElementById('loginOverlay').classList.contains('hidden')){
+    document.getElementById('loginOverlay').classList.add('hidden');
+  }
+})();
 initD();
 try{
   (function(){
